@@ -1,0 +1,77 @@
+{
+  "name": "zod-to-fields",
+  "version": "0.0.1",
+  "description": "Turn your Zod schemas into configurable field arrays for easy integration with HTML, React, Vue, and more.",
+  "main": "dist/index.js",
+  "author": "Wojciech Król",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wojtekKrol/zod-to-fields.git",
+    "bugs": "https://github.com/wojtekKrol/zod-to-fields/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dynamic-fields",
+    "field-generator",
+    "fields",
+    "react",
+    "schema",
+    "svelte",
+    "type-safe",
+    "typescript",
+    "validation",
+    "vue",
+    "zod"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "zod": "^3.0.0"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install",
+    "build": "tsc --build tsconfig.build.json && echo 'Build complete'",
+    "freshBuild": "rimraf dist  && tsc --build --incremental tsconfig.build.json",
+    "clean": "rimraf node_modules dist pnpm-lock.yaml",
+    "lint": "pnpm lint:code && pnpm lint:text && pnpm lint:types",
+    "lint:code": "eslint --cache --cache-location node_modules/.cache/eslint --cache-strategy content --ext ts .",
+    "lint:text": "prettier --check \"**/*.{json,md,mdx,yml}\"",
+    "lint:types": "pnpm build",
+    "pretest": "pnpm lint",
+    "coverage": "jest --coverage",
+    "test": "jest",
+    "prepublishOnly": "pnpm build",
+    "publishPackage": "pnpm prepublishOnly && pnpm publish --access public"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.5",
+    "@typescript-eslint/eslint-plugin": "6.4.1",
+    "@typescript-eslint/parser": "6.4.1",
+    "eslint": "8.47.0",
+    "eslint-config-next": "13.4.19",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-import-resolver-typescript": "3.6.0",
+    "eslint-plugin-import": "2.28.1",
+    "eslint-plugin-jest": "27.4.0",
+    "eslint-plugin-prettier": "5.0.0",
+    "husky": "8.0.3",
+    "jest": "29.7.0",
+    "jest-environment-jsdom": "29.7.0",
+    "lint-staged": "14.0.1",
+    "rimraf": "5.0.1",
+    "ts-jest": "29.1.1",
+    "ts-node": "10.9.1",
+    "tsup": "7.2.0",
+    "typescript": "5.2.2",
+    "zod": "^3.0.0"
+  }
+}

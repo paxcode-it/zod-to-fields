@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2020",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["jest"],
+    "lib": ["es2020", "dom"],
+    "resolveJsonModule": true,
+
+    /* Path Aliases */
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    /* Strictness and Type Checking */
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Emit */
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "./src",
+
+    /* Optimizations */
+    "skipLibCheck": true,
+    "incremental": true,
+
+    /* Source Maps */
+    "sourceMap": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
