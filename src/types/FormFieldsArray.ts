@@ -1,12 +1,12 @@
 import type {
-  BooleanFieldOptions,
-  NumberFieldOptions,
-  StringFieldOptions,
+  InputBooleanFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
 } from '@/types/FieldOptions'
 
 export type GenericFieldOptions =
-  | BooleanFieldOptions
-  | StringFieldOptions
-  | NumberFieldOptions
+  | InputBooleanFieldOptions
+  | InputStringFieldOptions
+  | InputNumberFieldOptions
 
 export type FormFieldsArray = Array<GenericFieldOptions>

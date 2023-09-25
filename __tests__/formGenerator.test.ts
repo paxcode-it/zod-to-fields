@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
 import type {
-  BooleanFieldOptions,
-  NumberFieldOptions,
-  StringFieldOptions,
+  InputBooleanFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
 } from '@/types/FieldOptions'
 import { MappedFieldOptions } from '@/types/UtilityTypes'
 import {
@@ -16,14 +16,22 @@ describe('formGenerator', () => {
   describe('createOptions', () => {
     it('should return options', () => {
       // Arrange
-      const schema = z.object({ username: z.string() })
+      const schema = z.object({
+        username: z.string(),
+        colors: z.enum(['red', 'white']),
+      })
       const options = { username: { placeholder: 'Username' } }
 
       // Act
       const createdOptions = createOptions(schema)
         .withFieldOptions({
-          username: {
-            placeholder: 'Username',
+          username: { placeholder: 'Username' },
+          colors: {
+            renderAs: 'select',
+            options: [
+              { value: 'red', label: 'Red' },
+              { value: 'white', label: 'White' },
+            ],
           },
         })
         .build()
@@ -41,10 +49,13 @@ describe('formGenerator', () => {
         age: z.number(),
         isAdmin: z.boolean(),
       })
-      const options: MappedFieldOptions<z.infer<typeof schema>> = {
-        username: { placeholder: 'Username' } as StringFieldOptions,
-        age: { placeholder: 'Age' } as NumberFieldOptions,
-        isAdmin: { label: 'Is Admin?', type: 'radio' } as BooleanFieldOptions,
+      const options: MappedFieldOptions<typeof schema> = {
+        username: { placeholder: 'Username' } as InputStringFieldOptions,
+        age: { placeholder: 'Age' } as InputNumberFieldOptions,
+        isAdmin: {
+          label: 'Is Admin?',
+          type: 'radio',
+        } as InputBooleanFieldOptions,
       }
 
       // Act
@@ -81,7 +92,9 @@ describe('formGenerator', () => {
     it('should handle string field', () => {
       // Arrange
       const fieldType = z.string()
-      const fieldOptions = { placeholder: 'Username' } as StringFieldOptions
+      const fieldOptions = {
+        placeholder: 'Username',
+      } as InputStringFieldOptions
 
       // Act
       const result = handleFieldType(fieldType, fieldOptions)
@@ -93,7 +106,7 @@ describe('formGenerator', () => {
     it('should handle number field', () => {
       // Arrange
       const fieldType = z.number()
-      const fieldOptions = { placeholder: 'Age' } as NumberFieldOptions
+      const fieldOptions = { placeholder: 'Age' } as InputNumberFieldOptions
 
       // Act
       const result = handleFieldType(fieldType, fieldOptions)
@@ -109,7 +122,7 @@ describe('formGenerator', () => {
     it('should handle boolean field', () => {
       // Arrange
       const fieldType = z.boolean()
-      const fieldOptions = { label: 'Is Admin?' } as BooleanFieldOptions
+      const fieldOptions = { label: 'Is Admin?' } as InputBooleanFieldOptions
 
       // Act
       const result = handleFieldType(fieldType, fieldOptions)
@@ -121,7 +134,7 @@ describe('formGenerator', () => {
     it('should have type radio', () => {
       // Arrange
       const fieldType = z.boolean()
-      const fieldOptions = { type: 'radio' } as BooleanFieldOptions
+      const fieldOptions = { type: 'radio' } as InputBooleanFieldOptions
 
       // Act
       const result = handleFieldType(fieldType, fieldOptions)

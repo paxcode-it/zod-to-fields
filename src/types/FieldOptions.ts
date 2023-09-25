@@ -1,4 +1,7 @@
-import type { BaseFieldAttributes } from '@/types/FieldAttributes'
+import type {
+  BaseEnumFieldOptions,
+  BaseFieldAttributes,
+} from '@/types/FieldAttributes'
 import type {
   PartialFieldInputAttributes,
   PartialFieldSelectAttributes,
@@ -9,16 +12,28 @@ type ExtendedFieldInputAttributes = BaseFieldAttributes &
   PartialFieldInputAttributes
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type ExtendedFieldSelectAttributes = BaseFieldAttributes &
-  PartialFieldSelectAttributes & {
+  Omit<PartialFieldSelectAttributes, 'options'> & {
     options: Array<PartialFieldOptionAttributes>
   }
 
-export type BooleanFieldOptions = ExtendedFieldInputAttributes & {
+export type InputBooleanFieldOptions = ExtendedFieldInputAttributes & {
   type?: 'checkbox' | 'radio'
 }
-export type StringFieldOptions = ExtendedFieldInputAttributes & {
+export type InputStringFieldOptions = ExtendedFieldInputAttributes & {
   type?: 'url' | 'text' | 'password' | 'search'
 }
-export type NumberFieldOptions = ExtendedFieldInputAttributes & {
+export type InputNumberFieldOptions = ExtendedFieldInputAttributes & {
   type?: 'number'
 }
+
+export type InputEnumFieldSelectOptions = BaseEnumFieldOptions & {
+  renderAs: 'select'
+} & ExtendedFieldSelectAttributes
+
+type InputEnumFieldInputOptions = BaseEnumFieldOptions & {
+  renderAs: 'input'
+} & InputBooleanFieldOptions
+
+export type InputEnumFieldOptions =
+  | InputEnumFieldSelectOptions
+  | InputEnumFieldInputOptions

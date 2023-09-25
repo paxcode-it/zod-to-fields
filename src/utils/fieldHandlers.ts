@@ -1,24 +1,24 @@
 import {
-  BooleanFieldOptions,
-  NumberFieldOptions,
-  StringFieldOptions,
+  InputBooleanFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
 } from '@/types/FieldOptions'
 import { GenericFieldOptions } from '@/types/FormFieldsArray'
 
 const handleZodString = (
-  fieldOptions: StringFieldOptions
+  fieldOptions: InputStringFieldOptions
 ): GenericFieldOptions => {
   return { type: 'text', ...fieldOptions }
 }
 
 const handleZodNumber = (
-  fieldOptions: NumberFieldOptions
+  fieldOptions: InputNumberFieldOptions
 ): GenericFieldOptions => {
   return { type: 'number', inputMode: 'numeric', ...fieldOptions }
 }
 
 const handleZodBoolean = (
-  fieldOptions: BooleanFieldOptions
+  fieldOptions: InputBooleanFieldOptions
 ): GenericFieldOptions => {
   return { type: 'checkbox', ...fieldOptions }
 }
