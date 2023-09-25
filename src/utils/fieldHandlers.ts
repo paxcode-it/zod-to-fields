@@ -1,5 +1,6 @@
 import {
   InputBooleanFieldOptions,
+  InputEnumFieldOptions,
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
@@ -23,4 +24,16 @@ const handleZodBoolean = (
   return { type: 'checkbox', ...fieldOptions }
 }
 
-export { handleZodBoolean, handleZodNumber, handleZodString }
+const handleZodEnum = (
+  fieldOptions: InputEnumFieldOptions
+): GenericFieldOptions => {
+  if (fieldOptions.renderAs === 'select') {
+    // handle select
+    return { type: 'select', ...fieldOptions }
+  } else {
+    // handle radio
+    return { type: 'radio', ...fieldOptions }
+  }
+}
+
+export { handleZodBoolean, handleZodNumber, handleZodString, handleZodEnum }

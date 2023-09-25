@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import type {
   InputBooleanFieldOptions,
+  InputEnumFieldOptions,
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
@@ -12,6 +13,7 @@ import { setDefaultOptions } from '@/utils/formHelpers'
 
 import {
   handleZodBoolean,
+  handleZodEnum,
   handleZodNumber,
   handleZodString,
 } from './fieldHandlers'
@@ -33,6 +35,11 @@ function handleFieldType(
     return handleZodNumber(fieldOptions as InputNumberFieldOptions)
   } else if (fieldType instanceof z.ZodBoolean) {
     return handleZodBoolean(fieldOptions as InputBooleanFieldOptions)
+  } else if (
+    fieldType instanceof z.ZodEnum ||
+    fieldType instanceof z.ZodNativeEnum
+  ) {
+    return handleZodEnum(fieldOptions as InputEnumFieldOptions)
   }
   throw new Error(`Unsupported Zod type`)
 }

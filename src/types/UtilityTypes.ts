@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any: "off"*/
 import { z } from 'zod'
 
 import type {
@@ -13,9 +14,9 @@ type FieldTypeToOptions<T> = T extends z.ZodBoolean
   ? InputStringFieldOptions
   : T extends z.ZodNumber
   ? InputNumberFieldOptions
-  : T extends z.ZodEnum<never>
+  : T extends z.ZodEnum<any>
   ? InputEnumFieldOptions
-  : T extends z.ZodNativeEnum<never>
+  : T extends z.ZodNativeEnum<any>
   ? InputEnumFieldOptions
   : never
 
