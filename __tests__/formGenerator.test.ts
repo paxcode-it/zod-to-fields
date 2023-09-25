@@ -20,7 +20,13 @@ describe('formGenerator', () => {
       const options = { username: { placeholder: 'Username' } }
 
       // Act
-      const createdOptions = createOptions(schema)(options)
+      const createdOptions = createOptions(schema)
+        .withFieldOptions({
+          username: {
+            placeholder: 'Username',
+          },
+        })
+        .build()
 
       // Assert
       expect(createdOptions).toEqual(options)
