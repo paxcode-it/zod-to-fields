@@ -1,89 +1,52 @@
-import { z } from 'zod'
+import { FormFieldsArray } from '@/types/FormFieldsArray'
+import { checkIfFieldsOverlapWithSchema } from '@/utils/fieldValidators'
 
-import { zodKeys } from '@/utils/zodHelpers'
+describe('checkIfFieldsOverlapWithSchema', () => {
+  it('should return true when schema keys match fields', () => {
+    const schemaKeys = ['username', 'password']
+    const fields: FormFieldsArray = [
+      { name: 'username' /* other properties */ },
+      { name: 'password' /* other properties */ },
+    ]
 
-describe('zodKeys', () => {
-  it('should return keys from a Zod object schema', () => {
-    // Arrange
-    const schema = z.object({
-      name: z.string(),
-      info: z.object({
-        age: z.number(),
-      }),
-    })
-
-    // Act
-    const keys = zodKeys(schema)
-
-    // Assert
-    expect(keys).toEqual(['name', 'info.age'])
+    expect(() =>
+      checkIfFieldsOverlapWithSchema(schemaKeys, fields)
+    ).not.toThrow()
   })
 
-  it('should handle nullable fields', () => {
-    // Arrange
-    const schema = z.object({
-      name: z.string().nullable(),
-      age: z.number().nullable(),
-    })
+  it('should throw error when schema keys length is not equal to fields length', () => {
+    const schemaKeys = ['username']
+    const fields: FormFieldsArray = [
+      { name: 'username' /* other properties */ },
+      { name: 'password' /* other properties */ },
+    ]
 
-    // Act
-    const keys = zodKeys(schema)
-
-    // Assert
-    expect(keys).toEqual(['name', 'age'])
+    expect(() => checkIfFieldsOverlapWithSchema(schemaKeys, fields)).toThrow(
+      'Fields length does not match schema length'
+    )
   })
 
-  it('should handle optional fields', () => {
-    // Arrange
-    const schema = z.object({
-      name: z.string(),
-      age: z.number().optional(),
-    })
+  it('should throw error when schema key is missing in fields', () => {
+    const schemaKeys = ['username', 'email']
+    const fields: FormFieldsArray = [
+      { name: 'username' /* other properties */ },
+      { name: 'password' /* other properties */ },
+    ]
 
-    // Act
-    const keys = zodKeys(schema)
-
-    // Assert
-    expect(keys).toEqual(['name', 'age'])
+    expect(() => checkIfFieldsOverlapWithSchema(schemaKeys, fields)).toThrow(
+      `Key email is missing in fields`
+    )
   })
 
-  it('should handle array fields', () => {
-    // Arrange
-    const schema = z.object({
-      names: z.array(z.string()),
-    })
+  it('should throw error when extra keys exist in fields', () => {
+    const schemaKeys = ['username']
+    const fields: FormFieldsArray = [
+      { name: 'username' /* other properties */ },
+      { name: 'extraKey' /* other properties */ },
+    ]
 
-    // Act
-    const keys = zodKeys(schema)
-
-    // Assert
-    expect(keys).toEqual(['names'])
-  })
-
-  it('should handle complex nested structures', () => {
-    // Arrange
-    const schema = z.object({
-      name: z.string(),
-      details: z.object({
-        age: z.number(),
-        address: z
-          .object({
-            street: z.string(),
-            zip: z.string(),
-          })
-          .nullable(),
-      }),
-    })
-
-    // Act
-    const keys = zodKeys(schema)
-
-    // Assert
-    expect(keys).toEqual([
-      'name',
-      'details.age',
-      'details.address.street',
-      'details.address.zip',
-    ])
+    expect(() => checkIfFieldsOverlapWithSchema(schemaKeys, fields)).toThrow(
+      'Fields length does not match schema length'
+    )
   })
 })
