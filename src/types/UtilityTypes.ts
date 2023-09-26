@@ -1,23 +1,25 @@
+/*eslint @typescript-eslint/no-explicit-any: "off"*/
+import { z } from 'zod'
+
 import type {
-  BooleanFieldOptions,
-  NumberFieldOptions,
-  StringFieldOptions,
+  InputBooleanFieldOptions,
+  InputEnumFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
 } from '@/types/FieldOptions'
 
-type FieldTypeToOptions<T> = T extends boolean
-  ? BooleanFieldOptions
-  : T extends string
-  ? StringFieldOptions
-  : T extends number
-  ? NumberFieldOptions
+type FieldTypeToOptions<T> = T extends z.ZodBoolean
+  ? InputBooleanFieldOptions
+  : T extends z.ZodString
+  ? InputStringFieldOptions
+  : T extends z.ZodNumber
+  ? InputNumberFieldOptions
+  : T extends z.ZodEnum<any>
+  ? InputEnumFieldOptions
+  : T extends z.ZodNativeEnum<any>
+  ? InputEnumFieldOptions
   : never
 
-export type MappedFieldOptions<T extends Record<string, unknown>> = {
-  [K in keyof T]?: FieldTypeToOptions<T[K]>
+export type MappedFieldOptions<T extends z.AnyZodObject> = {
+  [K in keyof T['shape']]?: FieldTypeToOptions<T['shape'][K]>
 }
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type Simplify<T> = { [K in keyof T]?: T[K] } & {}
-
-export type SimplifiedMappedFieldOptions<T extends Record<string, unknown>> =
-  Simplify<MappedFieldOptions<T>>
