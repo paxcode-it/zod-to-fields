@@ -18,6 +18,8 @@ type FieldTypeToOptions<T> = T extends z.ZodBoolean
   ? InputEnumFieldOptions
   : T extends z.ZodNativeEnum<any>
   ? InputEnumFieldOptions
+  : T extends z.ZodObject<any>
+  ? MappedFieldOptions<T>
   : never
 
 export type MappedFieldOptions<T extends z.AnyZodObject> = {

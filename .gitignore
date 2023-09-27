@@ -1,6 +1,6 @@
 .idea
 
 coverage
-dist
+build
 node_modules
 pnpm-debug.log

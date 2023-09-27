@@ -9,14 +9,13 @@ import type {
 import { GenericFieldOptions } from '@/types/FormFieldsArray'
 import type { FormFieldsArray } from '@/types/FormFieldsArray'
 import { MappedFieldOptions } from '@/types/UtilityTypes'
-import { setDefaultOptions } from '@/utils/formHelpers'
-
 import {
   handleZodBoolean,
   handleZodEnum,
   handleZodNumber,
   handleZodString,
-} from './fieldHandlers'
+} from '@/utils/fieldHandlers'
+import { setDefaultOptions } from '@/utils/formHelpers'
 
 /**
  * Handles the conversion of Zod types to appropriate field options.
