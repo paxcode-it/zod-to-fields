@@ -1,42 +1,45 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    width:100%;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.json-column, .form-column {
+    flex-grow: 1; /* To make the divs take up equal space */
+    max-width: 45%;
+    padding: 2rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Adding some shadow for smoothness */
+    margin: 1rem; /* Spacing between columns */
+    text-align: center; /* Centering content */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.json-column {
+    background-color: #fafafa; /* Light grey but softer */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.form-column {
+    background-color: #ffffff; /* White */
 }
 
-.card {
-  padding: 2em;
+.json-column pre {
+    text-align: left; /* Left aligns the preformatted text */
+    white-space: pre-wrap; /* Wraps the content */
+    word-break: break-word; /* Allows words to break and wrap onto the next line */
 }
 
-.read-the-docs {
-  color: #888;
+.form-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 1rem;
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
 }

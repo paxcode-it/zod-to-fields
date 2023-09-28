@@ -20,7 +20,7 @@ export type InputBooleanFieldOptions = ExtendedFieldInputAttributes & {
   type?: 'checkbox' | 'radio'
 }
 export type InputStringFieldOptions = ExtendedFieldInputAttributes & {
-  type?: 'url' | 'text' | 'password' | 'search'
+  type?: 'url' | 'text' | 'password' | 'search' | 'tel' | 'email'
 }
 export type InputNumberFieldOptions = ExtendedFieldInputAttributes & {
   type?: 'number'

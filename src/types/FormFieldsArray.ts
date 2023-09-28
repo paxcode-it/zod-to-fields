@@ -10,5 +10,6 @@ export type GenericFieldOptions =
   | InputStringFieldOptions
   | InputNumberFieldOptions
   | InputEnumFieldOptions
+  | { [key: string]: GenericFieldOptions }
 
 export type FormFieldsArray = Array<GenericFieldOptions>

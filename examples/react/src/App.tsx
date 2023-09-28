@@ -1,47 +1,85 @@
-import { useState } from 'react'
 import { z } from 'zod'
-import { createOptions } from 'zod-to-fields'
+import { ztf } from 'zod-to-fields'
 
-import reactLogo from './assets/react.svg'
-
-// eslint-disable-next-line import/no-unresolved
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
   const schema = z.object({
     name: z.string(),
-  })
-  const options = createOptions(schema).withFieldOptions({
-    name: {
-      label: 'Sieema',
-    },
+    lastName: z.string(),
+    isAdult: z.boolean(),
+    phoneNumber: z.string(),
+    email: z.string(),
+    address: z.object({
+      street: z.string(),
+      city: z.string(),
+      zip: z.string(),
+    }),
   })
 
+  const options = ztf
+    .createOptions(schema)
+    .withFieldOptions({
+      name: {
+        label: 'First Name',
+        type: 'text',
+      },
+      lastName: {
+        label: 'Last Name',
+        type: 'text',
+      },
+      isAdult: {
+        label: 'Are you an adult?',
+        type: 'checkbox',
+      },
+      phoneNumber: {
+        label: 'Phone Number',
+        type: 'tel',
+      },
+      email: {
+        type: 'email',
+      },
+      address: {
+        street: {
+          label: 'Street nested',
+        },
+      },
+    })
+    .build()
+
+  const formFields = ztf.generateFields(schema, options)
+
   return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
+    <div className='container'>
+      <div className='json-column'>
+        <h2>Form JSON Structure</h2>
+        <pre>{JSON.stringify(formFields, null, 2)}</pre>
       </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div className='form-column'>
+        <h2>Form</h2>
+        <form>
+          {formFields?.map(field => (
+            <div className='form-field' key={field.name}>
+              <label className='form-label'>{field.label}</label>
+              {field.type !== 'checkbox' ? (
+                <input
+                  type={field.type}
+                  name={field.name}
+                  className='form-input'
+                />
+              ) : (
+                <input
+                  type={field.type}
+                  name={field.name}
+                  className='form-checkbox'
+                />
+              )}
+            </div>
+          ))}
+        </form>
       </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 

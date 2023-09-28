@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     /* Language and Environment */
-    "target": "es2020",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "types": ["jest"],
     "lib": ["esnext", "dom"],
 
@@ -17,6 +17,7 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
 
     /* Emit */
     "declaration": true,
@@ -25,15 +26,9 @@
 
     /* Optimizations */
     "skipLibCheck": true, //skip checking .d.ts files
-    "incremental": true,
-
+    "incremental": true
   },
   "include": ["**/*.ts"],
-  "exclude": [
-    "node_modules",
-    "**/node_modules",
-    "build",
-    "coverage"
-  ],
 
+  "exclude": ["node_modules", "**/node_modules", "build", "coverage"]
 }

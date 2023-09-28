@@ -5,11 +5,18 @@ import { handleFieldType } from '@/utils/formGenerator'
 describe('handleFieldType function', () => {
   it('should handle ZodString', () => {
     // Arrange
-    const fieldType = z.string()
-    const fieldOptions = { type: 'text' }
+    const fieldKey = 'name'
+    const fieldValue = z.string()
+    const fieldOptions = {
+      id: 'name',
+      label: 'Name',
+      name: 'name',
+      tag: 'input',
+      type: 'text',
+    }
 
     // Act
-    const result = handleFieldType(fieldType, fieldOptions)
+    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
 
     // Assert
     expect(result).toEqual(fieldOptions)
@@ -17,45 +24,71 @@ describe('handleFieldType function', () => {
 
   it('should handle ZodNumber', () => {
     // Arrange
-    const fieldType = z.number()
-    const fieldOptions = { type: 'number' }
+    const fieldKey = 'age'
+    const fieldValue = z.number()
+    const fieldOptions = {
+      id: 'age',
+      label: 'Age',
+      name: 'age',
+      tag: 'input',
+      inputMode: 'numeric',
+      type: 'number',
+    }
 
     // Act
-    const result = handleFieldType(fieldType, fieldOptions)
+    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
 
     // Assert
-    expect(result).toEqual({ ...fieldOptions, inputMode: 'numeric' })
+    expect(result).toEqual(fieldOptions)
   })
 
   it('should handle ZodBoolean', () => {
     // Arrange
-    const fieldType = z.boolean()
-    const fieldOptions = { label: 'is Admin?' }
+    const fieldKey = 'isAdmin'
+    const fieldValue = z.boolean()
+    const fieldOptions = {
+      id: 'isAdmin',
+      label: 'is Admin?',
+      name: 'isAdmin',
+      tag: 'input',
+      type: 'checkbox',
+    }
 
     // Act
-    const result = handleFieldType(fieldType, fieldOptions)
+    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
 
     // Assert
-    expect(result).toEqual({ ...fieldOptions, type: 'checkbox' })
+    expect(result).toEqual(fieldOptions)
   })
 
   it('should handle ZodEnum', () => {
     // Arrange
-    const fieldType = z.enum(['Red', 'Green', 'Blue'])
-    const fieldOptions = { renderAs: 'select' }
+    const fieldKey = 'colors'
+    const fieldValue = z.enum(['Red', 'Green', 'Blue'])
+    const fieldOptions = {
+      id: 'colors',
+      label: 'Colors',
+      name: 'colors',
+      renderAs: 'select',
+      tag: 'select',
+      type: 'select',
+    }
 
     // Act
-    const result = handleFieldType(fieldType, fieldOptions)
+    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
 
     // Assert
-    expect(result).toEqual({ ...fieldOptions, type: 'select' })
+    expect(result).toEqual(fieldOptions)
   })
 
   it('should throw error for unsupported Zod type', () => {
     // Arrange
-    const fieldType = z.array(z.string())
+    const fieldKey = 'colors'
+    const fieldValue = z.array(z.string())
 
     // Act & Assert
-    expect(() => handleFieldType(fieldType, {})).toThrow('Unsupported Zod type')
+    expect(() => handleFieldType(fieldKey, fieldValue, {})).toThrow(
+      'Unsupported Zod type'
+    )
   })
 })

@@ -6,8 +6,7 @@ import type {
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
-import { GenericFieldOptions } from '@/types/FormFieldsArray'
-import type { FormFieldsArray } from '@/types/FormFieldsArray'
+import { FormFieldsArray, GenericFieldOptions } from '@/types/FormFieldsArray'
 import { MappedFieldOptions } from '@/types/UtilityTypes'
 import {
   handleZodBoolean,
@@ -19,26 +18,30 @@ import { setDefaultOptions } from '@/utils/formHelpers'
 
 /**
  * Handles the conversion of Zod types to appropriate field options.
- * @param {z.ZodTypeAny} fieldType - The Zod schema type.
+ * @param {z.ZodTypeAny} fieldValue - The Zod schema type.
  * @param {unknown} fieldOptions - Additional field options.
+ * @param {string} fieldKey - Additional field options.
  * @throws Will throw an error if the Zod type is unsupported.
  * @returns {GenericFieldOptions} - Returns the corresponding field element.
  */
-function handleFieldType(
-  fieldType: z.ZodTypeAny,
-  fieldOptions: unknown
+function handleFieldType<T extends z.AnyZodObject>(
+  fieldKey: string,
+  fieldValue: z.ZodTypeAny,
+  fieldOptions?: GenericFieldOptions | MappedFieldOptions<T>
 ): GenericFieldOptions {
-  if (fieldType instanceof z.ZodString) {
-    return handleZodString(fieldOptions as InputStringFieldOptions)
-  } else if (fieldType instanceof z.ZodNumber) {
-    return handleZodNumber(fieldOptions as InputNumberFieldOptions)
-  } else if (fieldType instanceof z.ZodBoolean) {
-    return handleZodBoolean(fieldOptions as InputBooleanFieldOptions)
+  const defaultOptions = setDefaultOptions(fieldKey, fieldValue)
+  const options = { ...defaultOptions, ...fieldOptions }
+  if (fieldValue instanceof z.ZodString) {
+    return handleZodString(options as InputStringFieldOptions)
+  } else if (fieldValue instanceof z.ZodNumber) {
+    return handleZodNumber(options as InputNumberFieldOptions)
+  } else if (fieldValue instanceof z.ZodBoolean) {
+    return handleZodBoolean(options as InputBooleanFieldOptions)
   } else if (
-    fieldType instanceof z.ZodEnum ||
-    fieldType instanceof z.ZodNativeEnum
+    fieldValue instanceof z.ZodEnum ||
+    fieldValue instanceof z.ZodNativeEnum
   ) {
-    return handleZodEnum(fieldOptions as InputEnumFieldOptions)
+    return handleZodEnum(options as InputEnumFieldOptions)
   }
   throw new Error(`Unsupported Zod type`)
 }
@@ -84,24 +87,32 @@ const createOptions = <T extends z.ZodRawShape>(
  * @returns {FormFieldsArray} - Returns an array of form fields.
  * @template T, K
  */
-const generateFormElementsFromSchema = <
-  T extends z.ZodRawShape,
-  K extends z.AnyZodObject,
->(
+const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
   schema: z.ZodObject<T>,
   options?: MappedFieldOptions<K>
 ): FormFieldsArray => {
-  return Object.entries(schema.shape).map(([fieldName, fieldType]) => {
-    const defaultOptions = setDefaultOptions(fieldName, fieldType)
+  const finalResult: FormFieldsArray = []
+  for (const [fieldName, fieldType] of Object.entries(schema.shape)) {
+    if (fieldType instanceof z.ZodObject) {
+      const nestedSchema = fieldType
+      const nestedOptions = options?.[fieldName] as MappedFieldOptions<
+        typeof nestedSchema
+      >
+
+      const generatedForm = generateFields(nestedSchema, nestedOptions)
+
+      finalResult.push({ [fieldName]: generatedForm })
+
+      continue
+    }
 
     const fieldOptions = options?.[fieldName]
-    const element = fieldOptions ? handleFieldType(fieldType, fieldOptions) : {}
+    const element = handleFieldType(fieldName, fieldType, fieldOptions)
 
-    return {
-      ...defaultOptions,
-      ...element,
-    }
-  })
+    finalResult.push(element)
+  }
+
+  return finalResult
 }
 
-export { createOptions, generateFormElementsFromSchema, handleFieldType }
+export { createOptions, generateFields, handleFieldType }

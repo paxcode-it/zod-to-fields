@@ -88,7 +88,7 @@ Generate form fields effortlessly:
 
 ```typescript
 import { z } from 'zod'
-import { createOptions, generateFormElementsFromSchema } from 'zod-to-fields'
+import { ztf } from 'zod-to-fields'
 
 const schema = z.object({
   name: z.string(),
@@ -96,13 +96,13 @@ const schema = z.object({
   isActive: z.boolean(),
 })
 
-const options = createOptions(schema)({
+const options = ztf.createOptions(schema)({
   name: { label: 'Full Name' },
   age: { label: 'Your Age', type: 'number' },
   isActive: { label: 'Active Status', type: 'checkbox' },
 })
 
-const formFields = generateFormElementsFromSchema(schema, options)
+const formFields = ztf.generateFields(schema, options)
 ```
 
 ## 📖 API Reference
