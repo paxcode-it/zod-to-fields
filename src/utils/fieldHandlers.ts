@@ -4,35 +4,38 @@ import {
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
-import { GenericFieldOptions } from '@/types/FormFieldsArray'
 
 const handleZodString = (
   fieldOptions: InputStringFieldOptions
-): GenericFieldOptions => {
-  return { type: 'text', ...fieldOptions }
+): InputStringFieldOptions => {
+  return { ...fieldOptions, type: fieldOptions.type ?? 'text' }
 }
 
 const handleZodNumber = (
   fieldOptions: InputNumberFieldOptions
-): GenericFieldOptions => {
-  return { type: 'number', inputMode: 'numeric', ...fieldOptions }
+): InputNumberFieldOptions => {
+  return {
+    inputMode: 'numeric',
+    ...fieldOptions,
+    type: fieldOptions.type ?? 'number',
+  }
 }
 
 const handleZodBoolean = (
   fieldOptions: InputBooleanFieldOptions
-): GenericFieldOptions => {
-  return { type: 'checkbox', ...fieldOptions }
+): InputBooleanFieldOptions => {
+  return { ...fieldOptions, type: fieldOptions.type ?? 'checkbox' }
 }
 
 const handleZodEnum = (
   fieldOptions: InputEnumFieldOptions
-): GenericFieldOptions => {
+): InputEnumFieldOptions => {
   if (fieldOptions.renderAs === 'select') {
     // handle select
-    return { type: 'select', ...fieldOptions }
+    return { ...fieldOptions }
   } else {
     // handle radio
-    return { type: 'radio', ...fieldOptions }
+    return { ...fieldOptions, type: fieldOptions.type ?? 'checkbox' }
   }
 }
 

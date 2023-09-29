@@ -8,6 +8,7 @@ import type {
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
 
+// Options should be optional, but the default one should be set by default, user can overwrite them, I think I need to split and duplicate it into two types
 type FieldTypeToOptions<T> = T extends z.ZodBoolean
   ? InputBooleanFieldOptions
   : T extends z.ZodString

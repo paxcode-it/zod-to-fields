@@ -1,5 +1,11 @@
 import * as z from 'zod'
 
+import {
+  InputBooleanFieldOptions,
+  InputEnumFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
+} from '@/types/FieldOptions'
 import { handleFieldType } from '@/utils/formGenerator'
 
 describe('handleFieldType function', () => {
@@ -7,7 +13,7 @@ describe('handleFieldType function', () => {
     // Arrange
     const fieldKey = 'name'
     const fieldValue = z.string()
-    const fieldOptions = {
+    const fieldOptions: InputStringFieldOptions = {
       id: 'name',
       label: 'Name',
       name: 'name',
@@ -26,7 +32,7 @@ describe('handleFieldType function', () => {
     // Arrange
     const fieldKey = 'age'
     const fieldValue = z.number()
-    const fieldOptions = {
+    const fieldOptions: InputNumberFieldOptions = {
       id: 'age',
       label: 'Age',
       name: 'age',
@@ -46,7 +52,7 @@ describe('handleFieldType function', () => {
     // Arrange
     const fieldKey = 'isAdmin'
     const fieldValue = z.boolean()
-    const fieldOptions = {
+    const fieldOptions: InputBooleanFieldOptions = {
       id: 'isAdmin',
       label: 'is Admin?',
       name: 'isAdmin',
@@ -65,13 +71,13 @@ describe('handleFieldType function', () => {
     // Arrange
     const fieldKey = 'colors'
     const fieldValue = z.enum(['Red', 'Green', 'Blue'])
-    const fieldOptions = {
+    const fieldOptions: InputEnumFieldOptions = {
       id: 'colors',
       label: 'Colors',
       name: 'colors',
       renderAs: 'select',
       tag: 'select',
-      type: 'select',
+      options: [],
     }
 
     // Act

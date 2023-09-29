@@ -3,28 +3,32 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 2rem;
-    width:100%;
+    width:auto;
+    color: #ec5990;
+    background-color: #081229;
 }
 
 .json-column, .form-column {
     flex-grow: 1; /* To make the divs take up equal space */
-    max-width: 45%;
     padding: 2rem;
-    border: 2px solid #ddd;
+    border: 1px solid transparent;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Adding some shadow for smoothness */
     margin: 1rem; /* Spacing between columns */
     text-align: center; /* Centering content */
+    box-shadow: 0 0 9px 0 #010817;
+    color: white;
 }
 
 .json-column {
-    background-color: #fafafa; /* Light grey but softer */
+    width: 30%;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .form-column {
-    background-color: #ffffff; /* White */
+    width: 60%;
 }
 
 .json-column pre {
@@ -42,4 +46,29 @@
 
 .form-label {
     margin-bottom: 0.5rem;
+}
+
+.form-error {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 0.2em;
+}
+
+.nested-indent {
+    margin-left: 20px;
+    border-left: 2px solid #ccc;
+    padding-left: 10px;
+}
+
+
+.form-nested {
+    border: 1px solid #ea0000;
+}
+
+.level-1 {
+    margin-left: 20px;
+}
+
+.level-2 {
+    margin-left: 40px;
 }
