@@ -1,15 +1,15 @@
-import { z, ZodEnum, ZodNativeEnum } from 'zod'
+import { z } from 'zod'
 
-const setDefaultOptions = (fieldName: string, fieldType: z.ZodTypeAny) => {
+const setDefaultOptions = (fieldKey: string, fieldValue: z.ZodTypeAny) => {
   const isEnum =
-    fieldType instanceof ZodEnum || fieldType instanceof ZodNativeEnum
+    fieldValue instanceof z.ZodEnum || fieldValue instanceof z.ZodNativeEnum
   const tag: 'select' | 'input' = isEnum ? 'select' : 'input'
-  const label = fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+  const label = fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)
 
   return {
-    id: fieldName,
+    id: fieldKey,
     label,
-    name: fieldName,
+    name: fieldKey,
     tag,
   }
 }

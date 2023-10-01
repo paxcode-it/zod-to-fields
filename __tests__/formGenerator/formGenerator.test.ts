@@ -57,6 +57,60 @@ describe('formGenerator', () => {
         },
       ])
     })
+    it('should generate enum structure with options', () => {
+      // Arrange
+      const schema = z.object({
+        colors: z.enum(['Red', 'Green', 'Blue']),
+      })
+
+      const options: MappedFieldOptions<typeof schema> = {
+        colors: {
+          tag: 'select',
+          options: [
+            { value: 'Red', label: 'Red' },
+            { value: 'Green', label: 'Green' },
+            { value: 'Blue', label: 'Blue' },
+          ],
+        },
+      }
+
+      // Act
+      const elements = generateFields(schema, options)
+
+      // Assert
+      expect(elements).toEqual([
+        {
+          id: 'colors',
+          label: 'Colors',
+          name: 'colors',
+          tag: 'select',
+          options: [
+            { value: 'Red', label: 'Red' },
+            { value: 'Green', label: 'Green' },
+            { value: 'Blue', label: 'Blue' },
+          ],
+        },
+      ])
+    })
+    it('should generate enum structure without options', () => {
+      // Arrange
+      const schema = z.object({
+        colors: z.enum(['Red', 'Green', 'Blue']),
+      })
+
+      // Act
+      const elements = generateFields(schema)
+
+      // Assert
+      expect(elements).toEqual([
+        {
+          id: 'colors',
+          label: 'Colors',
+          name: 'colors',
+          tag: 'select',
+        },
+      ])
+    })
   })
   describe('generateFormElementsFromScheme with nested fields', () => {
     it('should generate form with nested forms', () => {

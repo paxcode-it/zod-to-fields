@@ -75,7 +75,6 @@ describe('handleFieldType function', () => {
       id: 'colors',
       label: 'Colors',
       name: 'colors',
-      renderAs: 'select',
       tag: 'select',
       options: [],
     }

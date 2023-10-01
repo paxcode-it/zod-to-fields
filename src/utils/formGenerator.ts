@@ -93,6 +93,9 @@ const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
 ): FormFieldsArray => {
   const finalResult: FormFieldsArray = []
   for (const [fieldName, fieldType] of Object.entries(schema.shape)) {
+    console.log('fieldType')
+    console.log(fieldType._def.values)
+
     if (fieldType instanceof z.ZodObject) {
       const nestedSchema = fieldType
       const nestedOptions = options?.[fieldName] as MappedFieldOptions<

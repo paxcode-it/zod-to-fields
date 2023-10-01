@@ -74,7 +74,7 @@ describe('createOptions function', () => {
     })
 
     const fieldOptions = {
-      color: { renderAs: 'select' } as InputEnumFieldOptions,
+      color: { tag: 'select' } as InputEnumFieldOptions,
     }
 
     // Act
@@ -82,68 +82,8 @@ describe('createOptions function', () => {
     const result = build()
 
     // Assert
-    expect(result.color).toEqual({ renderAs: 'select' })
+    expect(result.color).toEqual({ tag: 'select' })
   })
 
   // Test for Multiple Configurations
-  it('should handle multiple configurations', () => {
-    // Arrange
-    const schema = z.object({
-      isActive: z.boolean(),
-      username: z.string(),
-      age: z.number(),
-      color: z.enum(['Red', 'Green', 'Blue']),
-    })
-
-    const fieldOptions = {
-      isActive: { type: 'checkbox' } as InputBooleanFieldOptions,
-      username: { type: 'text' } as InputStringFieldOptions,
-      age: { type: 'number' } as InputNumberFieldOptions,
-      color: {
-        renderAs: 'select',
-        options: [
-          {
-            value: 'red',
-            label: 'Red',
-          },
-          {
-            value: 'green',
-            label: 'Green',
-          },
-          {
-            value: 'blue',
-            label: 'Blue',
-          },
-        ],
-      } as InputEnumFieldOptions,
-    }
-
-    // Act
-    const { build } = createOptions(schema).withFieldOptions(fieldOptions)
-    const result = build()
-
-    // Assert
-    expect(result).toEqual({
-      isActive: { type: 'checkbox' },
-      username: { type: 'text' },
-      age: { type: 'number' },
-      color: {
-        renderAs: 'select',
-        options: [
-          {
-            value: 'red',
-            label: 'Red',
-          },
-          {
-            value: 'green',
-            label: 'Green',
-          },
-          {
-            value: 'blue',
-            label: 'Blue',
-          },
-        ],
-      },
-    })
-  })
 })

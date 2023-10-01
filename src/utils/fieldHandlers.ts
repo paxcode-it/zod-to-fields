@@ -15,8 +15,8 @@ const handleZodNumber = (
   fieldOptions: InputNumberFieldOptions
 ): InputNumberFieldOptions => {
   return {
-    inputMode: 'numeric',
     ...fieldOptions,
+    inputMode: fieldOptions.inputMode ?? 'numeric',
     type: fieldOptions.type ?? 'number',
   }
 }
@@ -30,7 +30,7 @@ const handleZodBoolean = (
 const handleZodEnum = (
   fieldOptions: InputEnumFieldOptions
 ): InputEnumFieldOptions => {
-  if (fieldOptions.renderAs === 'select') {
+  if (fieldOptions.tag === 'select') {
     // handle select
     return { ...fieldOptions }
   } else {

@@ -1,8 +1,4 @@
-import type {
-  BaseFieldAttributes,
-  BaseFieldAttributesForInput,
-  BaseFieldAttributesForSelect,
-} from '@/types/FieldAttributes'
+import type { BaseFieldAttributes } from '@/types/FieldAttributes'
 import type {
   PartialFieldInputAttributes,
   PartialFieldSelectAttributes,
@@ -14,27 +10,28 @@ type ExtendedFieldInputAttributes = BaseFieldAttributes &
 
 type ExtendedFieldSelectAttributes = Omit<BaseFieldAttributes, 'type'> &
   Omit<PartialFieldSelectAttributes, 'options'> & {
-    type?: never
     options: Array<PartialFieldOptionAttributes>
   }
 
 export type InputBooleanFieldOptions = ExtendedFieldInputAttributes & {
-  type?: 'checkbox' | 'radio'
+  type: 'checkbox' | 'radio'
 }
 
 export type InputStringFieldOptions = ExtendedFieldInputAttributes & {
-  type?: 'url' | 'text' | 'password' | 'search' | 'tel' | 'email'
+  type: 'url' | 'text' | 'password' | 'search' | 'tel' | 'email'
 }
 
 export type InputNumberFieldOptions = ExtendedFieldInputAttributes & {
-  type?: 'number'
+  type: 'number'
 }
 
-type InputEnumFieldSelectOptions = BaseFieldAttributesForSelect &
-  ExtendedFieldSelectAttributes
+type InputEnumFieldSelectOptions = {
+  tag: 'select'
+} & ExtendedFieldSelectAttributes
 
-type InputEnumFieldInputOptions = BaseFieldAttributesForInput &
-  InputBooleanFieldOptions & { options: Array<PartialFieldOptionAttributes> }
+type InputEnumFieldInputOptions = InputBooleanFieldOptions & {
+  options: Array<PartialFieldOptionAttributes>
+}
 
 export type InputEnumFieldOptions =
   | InputEnumFieldSelectOptions

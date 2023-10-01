@@ -7,16 +7,6 @@ export type BaseFieldAttributes = {
   label: string
 }
 
-export type BaseFieldAttributesForSelect = {
-  renderAs: 'select'
-  tag: 'select'
-}
-
-export type BaseFieldAttributesForInput = {
-  renderAs: 'input'
-  tag: 'input'
-}
-
 type HTMLInputTypeAttribute =
   | 'button'
   | 'checkbox'
