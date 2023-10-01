@@ -7,3 +7,6 @@ export * from '@/types/FieldOptions'
 export * from '@/utils/fieldValidators'
 export * from '@/utils/formGenerator'
 export * from '@/utils/zodHelpers'
+
+// Re-export type guards
+export * from '@/utils/typeGuards'

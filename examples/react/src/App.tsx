@@ -4,7 +4,7 @@ import { ztf } from 'zod-to-fields'
 import './App.css'
 
 function App() {
-  const [formValues, setFormValues] = useState({})
+  const [formValues, setFormValues] = useState<{ [index: string]: any }>({})
   const [errors, setErrors] = useState<{ [index: string]: any }>({})
 
   const schema = z.object({
@@ -80,9 +80,8 @@ function App() {
     }
   }
 
-  const renderField = (field: ztf.GenericFieldOptions) => {
+  const renderField = (field: ztf.GenericSignleFieldOptions) => {
     const error = errors[field.name]
-    console.log(field)
 
     return (
       <div className='form-field' key={field.name}>
@@ -95,7 +94,7 @@ function App() {
           id={field.id}
           className={field.type !== 'checkbox' ? 'form-input' : 'form-checkbox'}
           onChange={handleInputChange}
-          value={formValues[field.name] || ''}
+          value={formValues[field.name as string] || ''}
         />
         {error && <p className='form-error'>{error}</p>}
       </div>
@@ -109,14 +108,15 @@ function App() {
       }
 
       return Object.keys(field).map(key => {
-        if (Array.isArray(field[key])) {
+        const potentialArray = field[key]
+        if (ztf.isFormFieldsArray(potentialArray)) {
           return (
             <div
               className={`form-nested level-${level}`}
               key={`${key}_${index}`}
             >
               <h3>{key.toUpperCase()}</h3>
-              {renderFields(field[key], level + 1)}
+              {renderFields(potentialArray, level + 1)}
             </div>
           )
         }

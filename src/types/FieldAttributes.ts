@@ -1,4 +1,5 @@
 export type BaseFieldAttributes = {
+  [key: string]: unknown
   tag: 'input' | 'select'
   name: string
   id: string

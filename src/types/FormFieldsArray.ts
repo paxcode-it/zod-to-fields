@@ -13,3 +13,9 @@ export type GenericFieldOptions =
   | { [key: string]: FormFieldsArray }
 
 export type FormFieldsArray = Array<GenericFieldOptions>
+
+export type GenericSignleFieldOptions =
+  | InputBooleanFieldOptions
+  | InputStringFieldOptions
+  | InputNumberFieldOptions
+  | InputEnumFieldOptions
