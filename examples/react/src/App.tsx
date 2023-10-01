@@ -1,8 +1,14 @@
+/*eslint @typescript-eslint/no-explicit-any: "off"*/
 import { useState } from 'react'
 import { z } from 'zod'
 import { ztf } from 'zod-to-fields'
 import './App.css'
 
+enum Colors {
+  red = 'red',
+  green = 'green',
+  yellow = 'yellow',
+}
 function App() {
   const [formValues, setFormValues] = useState<{ [index: string]: any }>({})
   const [errors, setErrors] = useState<{ [index: string]: any }>({})
@@ -10,12 +16,13 @@ function App() {
   const schema = z.object({
     name: z
       .string()
-      .min(3, { message: 'Name too short xD' })
-      .max(6, { message: 'Name too long xD' }),
+      .min(3, { message: 'Name too short' })
+      .max(6, { message: 'Name too long' }),
     lastName: z.string(),
     isAdult: z.boolean(),
     phoneNumber: z.string(),
     currency: z.enum(['USD', 'EUR', 'GBP']),
+    colors: z.nativeEnum(Colors),
     email: z.string(),
     address: z.object({
       location: z.object({

@@ -1,5 +1,6 @@
+/*eslint @typescript-eslint/no-explicit-any: "off"*/
 export type BaseFieldAttributes = {
-  [key: string]: unknown
+  [key: string]: any
   tag: 'input' | 'select'
   name: string
   id: string

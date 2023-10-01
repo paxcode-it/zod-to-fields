@@ -9,7 +9,7 @@ import type {
 } from '@/types/FieldOptions'
 
 // Options should be optional, but the default one should be set by default, user can overwrite them, I think I need to split and duplicate it into two types
-export type FieldTypeToOptions<T> = T extends z.ZodBoolean
+export type FieldValueToOptions<T> = T extends z.ZodBoolean
   ? Partial<InputBooleanFieldOptions>
   : T extends z.ZodString
   ? Partial<InputStringFieldOptions>
@@ -24,5 +24,5 @@ export type FieldTypeToOptions<T> = T extends z.ZodBoolean
   : never
 
 export type MappedFieldOptions<T extends z.AnyZodObject> = {
-  [K in keyof T['shape']]?: FieldTypeToOptions<T['shape'][K]>
+  [K in keyof T['shape']]?: FieldValueToOptions<T['shape'][K]>
 }

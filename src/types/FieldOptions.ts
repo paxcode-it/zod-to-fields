@@ -6,7 +6,7 @@ import type {
 } from '@/types/HTMLAttributes'
 
 type ExtendedFieldInputAttributes = BaseFieldAttributes &
-  PartialFieldInputAttributes
+  Omit<PartialFieldInputAttributes, 'name'>
 
 type ExtendedFieldSelectAttributes = Omit<BaseFieldAttributes, 'type'> &
   Omit<PartialFieldSelectAttributes, 'options'> & {

@@ -1,3 +1,5 @@
+import { EnumLike, z } from 'zod'
+
 import {
   InputBooleanFieldOptions,
   InputEnumFieldOptions,
@@ -27,16 +29,56 @@ const handleZodBoolean = (
   return { ...fieldOptions, type: fieldOptions.type ?? 'checkbox' }
 }
 
-const handleZodEnum = (
-  fieldOptions: InputEnumFieldOptions
+const handleZodEnum = <T extends [string, ...string[]]>(
+  fieldOptions: InputEnumFieldOptions,
+  fieldValue: z.ZodEnum<T>
 ): InputEnumFieldOptions => {
+  const options = fieldValue._def.values.map(value => ({
+    label: value.charAt(0).toUpperCase() + value.slice(1),
+    value,
+  }))
+
   if (fieldOptions.tag === 'select') {
     // handle select
-    return { ...fieldOptions }
+    return { ...fieldOptions, options: fieldOptions.options ?? options }
   } else {
     // handle radio
-    return { ...fieldOptions, type: fieldOptions.type ?? 'checkbox' }
+    return {
+      ...fieldOptions,
+      type: fieldOptions.type ?? 'checkbox',
+      options: fieldOptions.options ?? options,
+    }
   }
 }
 
-export { handleZodBoolean, handleZodNumber, handleZodString, handleZodEnum }
+const handleNativeZodEnum = <T extends EnumLike>(
+  fieldOptions: InputEnumFieldOptions,
+  fieldValue: z.ZodNativeEnum<T>
+): InputEnumFieldOptions => {
+  const options = Object.entries(fieldValue._def.values).map(
+    ([key, value]) => ({
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+      value,
+    })
+  )
+
+  if (fieldOptions.tag === 'select') {
+    // handle select
+    return { ...fieldOptions, options: fieldOptions.options ?? options }
+  } else {
+    // handle radio
+    return {
+      ...fieldOptions,
+      type: fieldOptions.type ?? 'checkbox',
+      options: fieldOptions.options ?? options,
+    }
+  }
+}
+
+export {
+  handleZodBoolean,
+  handleZodNumber,
+  handleZodString,
+  handleZodEnum,
+  handleNativeZodEnum,
+}

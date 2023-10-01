@@ -108,6 +108,42 @@ describe('formGenerator', () => {
           label: 'Colors',
           name: 'colors',
           tag: 'select',
+          options: [
+            { value: 'Red', label: 'Red' },
+            { value: 'Green', label: 'Green' },
+            { value: 'Blue', label: 'Blue' },
+          ],
+        },
+      ])
+    })
+    it('should generate native enum structure without options', () => {
+      // Arrange
+      enum Colors {
+        red = 'red',
+        green = 'green',
+        yellow = 'yellow',
+      }
+
+      const schema = z.object({
+        colors: z.nativeEnum(Colors),
+      })
+
+      // Act
+      const elements = generateFields(schema)
+
+      // Assert
+
+      expect(elements).toEqual([
+        {
+          id: 'colors',
+          label: 'Colors',
+          name: 'colors',
+          tag: 'select',
+          options: [
+            { value: 'red', label: 'Red' },
+            { value: 'green', label: 'Green' },
+            { value: 'yellow', label: 'Yellow' },
+          ],
         },
       ])
     })

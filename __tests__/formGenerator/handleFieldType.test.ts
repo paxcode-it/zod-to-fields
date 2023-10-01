@@ -6,9 +6,9 @@ import {
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
-import { handleFieldType } from '@/utils/formGenerator'
+import { handleFieldValue } from '@/utils/formGenerator'
 
-describe('handleFieldType function', () => {
+describe('handleFieldValue function', () => {
   it('should handle ZodString', () => {
     // Arrange
     const fieldKey = 'name'
@@ -22,7 +22,7 @@ describe('handleFieldType function', () => {
     }
 
     // Act
-    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
+    const result = handleFieldValue(fieldKey, fieldValue, fieldOptions)
 
     // Assert
     expect(result).toEqual(fieldOptions)
@@ -42,7 +42,7 @@ describe('handleFieldType function', () => {
     }
 
     // Act
-    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
+    const result = handleFieldValue(fieldKey, fieldValue, fieldOptions)
 
     // Assert
     expect(result).toEqual(fieldOptions)
@@ -61,7 +61,7 @@ describe('handleFieldType function', () => {
     }
 
     // Act
-    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
+    const result = handleFieldValue(fieldKey, fieldValue, fieldOptions)
 
     // Assert
     expect(result).toEqual(fieldOptions)
@@ -80,7 +80,7 @@ describe('handleFieldType function', () => {
     }
 
     // Act
-    const result = handleFieldType(fieldKey, fieldValue, fieldOptions)
+    const result = handleFieldValue(fieldKey, fieldValue, fieldOptions)
 
     // Assert
     expect(result).toEqual(fieldOptions)
@@ -92,7 +92,7 @@ describe('handleFieldType function', () => {
     const fieldValue = z.array(z.string())
 
     // Act & Assert
-    expect(() => handleFieldType(fieldKey, fieldValue, {})).toThrow(
+    expect(() => handleFieldValue(fieldKey, fieldValue, {})).toThrow(
       'Unsupported Zod type'
     )
   })

@@ -7,8 +7,9 @@ import type {
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
 import { FormFieldsArray, GenericFieldOptions } from '@/types/FormFieldsArray'
-import { FieldTypeToOptions, MappedFieldOptions } from '@/types/UtilityTypes'
+import { FieldValueToOptions, MappedFieldOptions } from '@/types/UtilityTypes'
 import {
+  handleNativeZodEnum,
   handleZodBoolean,
   handleZodEnum,
   handleZodNumber,
@@ -24,10 +25,10 @@ import { setDefaultOptions } from '@/utils/formHelpers'
  * @throws Will throw an error if the Zod type is unsupported.
  * @returns {GenericFieldOptions} - Returns the corresponding field element.
  */
-function handleFieldType<T extends z.AnyZodObject>(
+function handleFieldValue<T extends z.AnyZodObject>(
   fieldKey: string,
   fieldValue: z.ZodTypeAny,
-  fieldOptions?: GenericFieldOptions | FieldTypeToOptions<T>
+  fieldOptions?: GenericFieldOptions | FieldValueToOptions<T>
 ): GenericFieldOptions {
   const defaultOptions = setDefaultOptions(fieldKey, fieldValue)
   const options = { ...defaultOptions, ...fieldOptions }
@@ -37,11 +38,10 @@ function handleFieldType<T extends z.AnyZodObject>(
     return handleZodNumber(options as InputNumberFieldOptions)
   } else if (fieldValue instanceof z.ZodBoolean) {
     return handleZodBoolean(options as InputBooleanFieldOptions)
-  } else if (
-    fieldValue instanceof z.ZodEnum ||
-    fieldValue instanceof z.ZodNativeEnum
-  ) {
-    return handleZodEnum(options as InputEnumFieldOptions)
+  } else if (fieldValue instanceof z.ZodEnum) {
+    return handleZodEnum(options as InputEnumFieldOptions, fieldValue)
+  } else if (fieldValue instanceof z.ZodNativeEnum) {
+    return handleNativeZodEnum(options as InputEnumFieldOptions, fieldValue)
   }
   throw new Error(`Unsupported Zod type`)
 }
@@ -92,25 +92,22 @@ const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
   options?: MappedFieldOptions<K>
 ): FormFieldsArray => {
   const finalResult: FormFieldsArray = []
-  for (const [fieldName, fieldType] of Object.entries(schema.shape)) {
-    console.log('fieldType')
-    console.log(fieldType._def.values)
-
-    if (fieldType instanceof z.ZodObject) {
-      const nestedSchema = fieldType
-      const nestedOptions = options?.[fieldName] as MappedFieldOptions<
+  for (const [fieldKey, fieldValue] of Object.entries(schema.shape)) {
+    if (fieldValue instanceof z.ZodObject) {
+      const nestedSchema = fieldValue
+      const nestedOptions = options?.[fieldKey] as MappedFieldOptions<
         typeof nestedSchema
       >
 
       const generatedForm = generateFields(nestedSchema, nestedOptions)
 
-      finalResult.push({ [fieldName]: generatedForm })
+      finalResult.push({ [fieldKey]: generatedForm })
 
       continue
     }
 
-    const fieldOptions = options?.[fieldName]
-    const element = handleFieldType(fieldName, fieldType, fieldOptions)
+    const fieldOptions = options?.[fieldKey]
+    const element = handleFieldValue(fieldKey, fieldValue, fieldOptions)
 
     finalResult.push(element)
   }
@@ -118,4 +115,4 @@ const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
   return finalResult
 }
 
-export { createOptions, generateFields, handleFieldType }
+export { createOptions, generateFields, handleFieldValue }
