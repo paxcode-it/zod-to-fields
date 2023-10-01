@@ -5,7 +5,7 @@ import './App.css'
 
 function App() {
   const [formValues, setFormValues] = useState({})
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<{ [index: string]: any }>({})
 
   const schema = z.object({
     name: z

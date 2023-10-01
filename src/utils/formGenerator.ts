@@ -7,7 +7,7 @@ import type {
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
 import { FormFieldsArray, GenericFieldOptions } from '@/types/FormFieldsArray'
-import { MappedFieldOptions } from '@/types/UtilityTypes'
+import { FieldTypeToOptions, MappedFieldOptions } from '@/types/UtilityTypes'
 import {
   handleZodBoolean,
   handleZodEnum,
@@ -27,7 +27,7 @@ import { setDefaultOptions } from '@/utils/formHelpers'
 function handleFieldType<T extends z.AnyZodObject>(
   fieldKey: string,
   fieldValue: z.ZodTypeAny,
-  fieldOptions?: GenericFieldOptions | MappedFieldOptions<T>
+  fieldOptions?: GenericFieldOptions | FieldTypeToOptions<T>
 ): GenericFieldOptions {
   const defaultOptions = setDefaultOptions(fieldKey, fieldValue)
   const options = { ...defaultOptions, ...fieldOptions }
