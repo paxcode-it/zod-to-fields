@@ -76,6 +76,7 @@ describe('handleFieldValue function', () => {
       label: 'Colors',
       name: 'colors',
       tag: 'select',
+      type: 'select',
       options: [],
     }
 

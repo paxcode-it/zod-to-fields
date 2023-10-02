@@ -1,14 +1,19 @@
 /*eslint @typescript-eslint/no-explicit-any: "off"*/
-export type BaseFieldAttributes = {
+type AdditionalAttributes = {
   [key: string]: any
+}
+
+export type BaseFieldAttributes = {
   tag: 'input' | 'select'
   name: string
   id: string
-  type: HTMLInputTypeAttribute
+  type: EnhancedHTMLInputTypeAttribute
   label: string
 }
 
-type HTMLInputTypeAttribute =
+export type ExtendedFieldAttributes = BaseFieldAttributes & AdditionalAttributes
+
+type EnhancedHTMLInputTypeAttribute =
   | 'button'
   | 'checkbox'
   | 'color'
@@ -25,6 +30,7 @@ type HTMLInputTypeAttribute =
   | 'range'
   | 'reset'
   | 'search'
+  | 'select'
   | 'submit'
   | 'tel'
   | 'text'

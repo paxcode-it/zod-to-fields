@@ -90,19 +90,32 @@ function App() {
   const renderField = (field: ztf.GenericSignleFieldOptions) => {
     const error = errors[field.name]
 
+    const isSelect = field.tag === 'select'
+
     return (
       <div className='form-field' key={field.name}>
         <label className='form-label' htmlFor={field.id}>
           {field.label}
         </label>
-        <input
-          type={field.type}
-          name={field.name}
-          id={field.id}
-          className={field.type !== 'checkbox' ? 'form-input' : 'form-checkbox'}
-          onChange={handleInputChange}
-          value={formValues[field.name as string] || ''}
-        />
+        {isSelect ? (
+          <select>
+            {field.options?.map(option => (
+              <option value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type={field.type}
+            name={field.name}
+            id={field.id}
+            className={
+              field.type !== 'checkbox' ? 'form-input' : 'form-checkbox'
+            }
+            onChange={handleInputChange}
+            value={formValues[field.name as string] || ''}
+          />
+        )}
+
         {error && <p className='form-error'>{error}</p>}
       </div>
     )
