@@ -5,8 +5,20 @@ describe('checkIfFieldsOverlapWithSchema', () => {
   it('should return true when schema keys match fields', () => {
     const schemaKeys = ['username', 'password']
     const fields: FormFieldsArray = [
-      { name: 'username' /* other properties */ },
-      { name: 'password' /* other properties */ },
+      {
+        name: 'username',
+        type: 'text',
+        label: 'Username',
+        tag: 'input',
+        id: 'username',
+      },
+      {
+        name: 'password',
+        type: 'password',
+        label: 'Password',
+        tag: 'input',
+        id: 'password',
+      },
     ]
 
     expect(() =>
@@ -17,8 +29,20 @@ describe('checkIfFieldsOverlapWithSchema', () => {
   it('should throw error when schema keys length is not equal to fields length', () => {
     const schemaKeys = ['username']
     const fields: FormFieldsArray = [
-      { name: 'username' /* other properties */ },
-      { name: 'password' /* other properties */ },
+      {
+        name: 'username',
+        type: 'text',
+        label: 'Username',
+        tag: 'input',
+        id: 'username',
+      },
+      {
+        name: 'password',
+        type: 'password',
+        label: 'Password',
+        tag: 'input',
+        id: 'password',
+      },
     ]
 
     expect(() => checkIfFieldsOverlapWithSchema(schemaKeys, fields)).toThrow(
@@ -29,8 +53,20 @@ describe('checkIfFieldsOverlapWithSchema', () => {
   it('should throw error when schema key is missing in fields', () => {
     const schemaKeys = ['username', 'email']
     const fields: FormFieldsArray = [
-      { name: 'username' /* other properties */ },
-      { name: 'password' /* other properties */ },
+      {
+        name: 'username',
+        type: 'text',
+        label: 'Username',
+        tag: 'input',
+        id: 'username',
+      },
+      {
+        name: 'password',
+        type: 'password',
+        label: 'Password',
+        tag: 'input',
+        id: 'password',
+      },
     ]
 
     expect(() => checkIfFieldsOverlapWithSchema(schemaKeys, fields)).toThrow(
@@ -41,8 +77,20 @@ describe('checkIfFieldsOverlapWithSchema', () => {
   it('should throw error when extra keys exist in fields', () => {
     const schemaKeys = ['username']
     const fields: FormFieldsArray = [
-      { name: 'username' /* other properties */ },
-      { name: 'extraKey' /* other properties */ },
+      {
+        name: 'username',
+        type: 'text',
+        label: 'Username',
+        tag: 'input',
+        id: 'username',
+      },
+      {
+        name: 'password',
+        type: 'password',
+        label: 'Password',
+        tag: 'input',
+        id: 'password',
+      },
     ]
 
     expect(() => checkIfFieldsOverlapWithSchema(schemaKeys, fields)).toThrow(

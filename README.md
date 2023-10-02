@@ -25,13 +25,20 @@
 
 ## 📚 Table of Contents
 
-1. [Features](#features)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [API Reference](#api-reference)
-5. [Examples](#examples)
-6. [Contributing](#contributing)
-7. [License](#license)
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+   - [Basic Example](#basic-example)
+   - [Advanced Usage](#advanced-usage)
+5. [API Reference](#api-reference)
+6. [Examples](#examples)
+7. [Contributing](#contributing)
+8. [License](#license)
+
+## 📑 Introduction
+
+This library helps you convert Zod schemas to form fields, reducing boilerplate code and enforcing type safety.
 
 ## ⭐ Features
 
@@ -88,7 +95,7 @@ Generate form fields effortlessly:
 
 ```typescript
 import { z } from 'zod'
-import { createOptions, generateFormElementsFromSchema } from 'zod-to-fields'
+import { ztf } from 'zod-to-fields'
 
 const schema = z.object({
   name: z.string(),
@@ -96,18 +103,124 @@ const schema = z.object({
   isActive: z.boolean(),
 })
 
-const options = createOptions(schema)({
+const options = ztf.createOptions(schema)({
   name: { label: 'Full Name' },
   age: { label: 'Your Age', type: 'number' },
   isActive: { label: 'Active Status', type: 'checkbox' },
 })
 
-const formFields = generateFormElementsFromSchema(schema, options)
+const formFields = ztf.generateFields(schema, options)
 ```
+
+## 🧙 Advanced Usage
+
+### Nested Schemas
+
+For nested schemas, you can define a Zod schema as follows:
+
+```typescript
+const schema = z.object({
+  name: z.string(),
+  lastName: z.string(),
+  isAdult: z.boolean(),
+  phoneNumber: z.string(),
+  currency: z.enum(['USD', 'EUR', 'GBP']),
+  colors: z.nativeEnum(Colors),
+  email: z.string(),
+  address: z.object({
+    location: z.object({
+      longitude: z.number(),
+      latitude: z.number(),
+    }),
+    street: z.string(),
+    city: z.string(),
+    zip: z.string(),
+  }),
+})
+```
+
+### Enums and Native Enums
+
+The library also supports Zod's enum and nativeEnum types,
+allowing you to use either string-based or native TypeScript enums as options in your form fields.
 
 ## 📖 API Reference
 
-For a deep dive into the functionality and method signatures, please refer to the inline JSDocs in the codebase.
+### `createOptions`
+
+```typescript
+/**
+ * Creates and manages field options based on a Zod schema.
+ * @param initialSchema The initial Zod schema.
+ * @returns An object containing methods for manipulating field options.
+ */
+```
+
+#### Usage
+
+```typescript
+const options = createOptions(schema)
+```
+
+#### Parameters
+
+- `initialSchema`: Your Zod schema object.
+
+#### Returns
+
+- `withFieldOptions`: Method for setting field options.
+- `build`: Method for building the final options object.
+
+### `withFieldOptions`
+
+```typescript
+/**
+ * Merges the provided field options with existing options.
+ * @param fieldOptions The field options to merge.
+ * @returns An object containing methods for further manipulation or to build the options. Chainable.
+ */
+```
+
+#### Usage
+
+```typescript
+const { withFieldOptions, build } = createOptions(schema)
+withFieldOptions({
+  /* field options */
+}).build()
+```
+
+#### Parameters
+
+- `fieldOptions`: Object containing the attributes you want to customize.
+
+#### Returns
+
+- Chainable methods for further manipulation.
+
+#### Type Behavior
+
+- `z.string()` will generate field options of type `InputStringFieldOptions`, which is narrowed to allow string types like `text`, `password`, etc. You can override these settings with any other property which is a subset of `Partial<HTMLInputElement>`.
+
+- `z.enum()` and `z.nativeEnum()` will generate field options of type `InputEnumFieldOptions`, allowing you to specify options either as a select dropdown or as radio buttons.
+
+### `build`
+
+```typescript
+/**
+ * Builds the final options object.
+ * @returns The built options object.
+ */
+```
+
+#### Usage
+
+```typescript
+const { build } = createOptions(schema).withFieldOptions({
+  /* field options */
+})
+const finalOptions = build()
+```
 
 ## 📂 Examples
 

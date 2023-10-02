@@ -1,39 +1,84 @@
+import { EnumLike, z } from 'zod'
+
 import {
   InputBooleanFieldOptions,
   InputEnumFieldOptions,
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
-import { GenericFieldOptions } from '@/types/FormFieldsArray'
 
 const handleZodString = (
   fieldOptions: InputStringFieldOptions
-): GenericFieldOptions => {
-  return { type: 'text', ...fieldOptions }
+): InputStringFieldOptions => {
+  return { ...fieldOptions, type: fieldOptions.type ?? 'text' }
 }
 
 const handleZodNumber = (
   fieldOptions: InputNumberFieldOptions
-): GenericFieldOptions => {
-  return { type: 'number', inputMode: 'numeric', ...fieldOptions }
+): InputNumberFieldOptions => {
+  return {
+    ...fieldOptions,
+    inputMode: fieldOptions.inputMode ?? 'numeric',
+    type: fieldOptions.type ?? 'number',
+  }
 }
 
 const handleZodBoolean = (
   fieldOptions: InputBooleanFieldOptions
-): GenericFieldOptions => {
-  return { type: 'checkbox', ...fieldOptions }
+): InputBooleanFieldOptions => {
+  return { ...fieldOptions, type: fieldOptions.type ?? 'checkbox' }
 }
 
-const handleZodEnum = (
-  fieldOptions: InputEnumFieldOptions
-): GenericFieldOptions => {
-  if (fieldOptions.renderAs === 'select') {
+const handleZodEnum = <T extends [string, ...string[]]>(
+  fieldOptions: InputEnumFieldOptions,
+  fieldValue: z.ZodEnum<T>
+): InputEnumFieldOptions => {
+  const options = fieldValue._def.values.map(value => ({
+    label: value.charAt(0).toUpperCase() + value.slice(1),
+    value,
+  }))
+
+  if (fieldOptions.tag === 'select') {
     // handle select
-    return { type: 'select', ...fieldOptions }
+    return { ...fieldOptions, options: fieldOptions.options ?? options }
   } else {
     // handle radio
-    return { type: 'radio', ...fieldOptions }
+    return {
+      ...fieldOptions,
+      type: fieldOptions.type ?? 'checkbox',
+      options: fieldOptions.options ?? options,
+    }
   }
 }
 
-export { handleZodBoolean, handleZodNumber, handleZodString, handleZodEnum }
+const handleNativeZodEnum = <T extends EnumLike>(
+  fieldOptions: InputEnumFieldOptions,
+  fieldValue: z.ZodNativeEnum<T>
+): InputEnumFieldOptions => {
+  const options = Object.entries(fieldValue._def.values).map(
+    ([key, value]) => ({
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+      value,
+    })
+  )
+
+  if (fieldOptions.tag === 'select') {
+    // handle select
+    return { ...fieldOptions, options: fieldOptions.options ?? options }
+  } else {
+    // handle radio
+    return {
+      ...fieldOptions,
+      type: fieldOptions.type ?? 'checkbox',
+      options: fieldOptions.options ?? options,
+    }
+  }
+}
+
+export {
+  handleZodBoolean,
+  handleZodNumber,
+  handleZodString,
+  handleZodEnum,
+  handleNativeZodEnum,
+}

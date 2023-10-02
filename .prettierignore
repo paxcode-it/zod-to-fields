@@ -2,5 +2,5 @@
 pnpm-lock.json
 node_modules
 pnpm-debug.log
-dist
+build
 /coverage

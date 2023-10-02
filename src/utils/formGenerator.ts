@@ -6,40 +6,42 @@ import type {
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
-import { GenericFieldOptions } from '@/types/FormFieldsArray'
-import type { FormFieldsArray } from '@/types/FormFieldsArray'
-import { MappedFieldOptions } from '@/types/UtilityTypes'
-import { setDefaultOptions } from '@/utils/formHelpers'
-
+import { FormFieldsArray, GenericFieldOptions } from '@/types/FormFieldsArray'
+import { FieldValueToOptions, MappedFieldOptions } from '@/types/UtilityTypes'
 import {
+  handleNativeZodEnum,
   handleZodBoolean,
   handleZodEnum,
   handleZodNumber,
   handleZodString,
-} from './fieldHandlers'
+} from '@/utils/fieldHandlers'
+import { setDefaultOptions } from '@/utils/formHelpers'
 
 /**
  * Handles the conversion of Zod types to appropriate field options.
- * @param {z.ZodTypeAny} fieldType - The Zod schema type.
+ * @param {z.ZodTypeAny} fieldValue - The Zod schema type.
  * @param {unknown} fieldOptions - Additional field options.
+ * @param {string} fieldKey - Additional field options.
  * @throws Will throw an error if the Zod type is unsupported.
  * @returns {GenericFieldOptions} - Returns the corresponding field element.
  */
-function handleFieldType(
-  fieldType: z.ZodTypeAny,
-  fieldOptions: unknown
+function handleFieldValue<T extends z.AnyZodObject>(
+  fieldKey: string,
+  fieldValue: z.ZodTypeAny,
+  fieldOptions?: GenericFieldOptions | FieldValueToOptions<T>
 ): GenericFieldOptions {
-  if (fieldType instanceof z.ZodString) {
-    return handleZodString(fieldOptions as InputStringFieldOptions)
-  } else if (fieldType instanceof z.ZodNumber) {
-    return handleZodNumber(fieldOptions as InputNumberFieldOptions)
-  } else if (fieldType instanceof z.ZodBoolean) {
-    return handleZodBoolean(fieldOptions as InputBooleanFieldOptions)
-  } else if (
-    fieldType instanceof z.ZodEnum ||
-    fieldType instanceof z.ZodNativeEnum
-  ) {
-    return handleZodEnum(fieldOptions as InputEnumFieldOptions)
+  const defaultOptions = setDefaultOptions(fieldKey, fieldValue)
+  const options = { ...defaultOptions, ...fieldOptions }
+  if (fieldValue instanceof z.ZodString) {
+    return handleZodString(options as InputStringFieldOptions)
+  } else if (fieldValue instanceof z.ZodNumber) {
+    return handleZodNumber(options as InputNumberFieldOptions)
+  } else if (fieldValue instanceof z.ZodBoolean) {
+    return handleZodBoolean(options as InputBooleanFieldOptions)
+  } else if (fieldValue instanceof z.ZodEnum) {
+    return handleZodEnum(options as InputEnumFieldOptions, fieldValue)
+  } else if (fieldValue instanceof z.ZodNativeEnum) {
+    return handleNativeZodEnum(options as InputEnumFieldOptions, fieldValue)
   }
   throw new Error(`Unsupported Zod type`)
 }
@@ -85,24 +87,32 @@ const createOptions = <T extends z.ZodRawShape>(
  * @returns {FormFieldsArray} - Returns an array of form fields.
  * @template T, K
  */
-const generateFormElementsFromSchema = <
-  T extends z.ZodRawShape,
-  K extends z.AnyZodObject,
->(
+const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
   schema: z.ZodObject<T>,
   options?: MappedFieldOptions<K>
 ): FormFieldsArray => {
-  return Object.entries(schema.shape).map(([fieldName, fieldType]) => {
-    const defaultOptions = setDefaultOptions(fieldName, fieldType)
+  const finalResult: FormFieldsArray = []
+  for (const [fieldKey, fieldValue] of Object.entries(schema.shape)) {
+    if (fieldValue instanceof z.ZodObject) {
+      const nestedSchema = fieldValue
+      const nestedOptions = options?.[fieldKey] as MappedFieldOptions<
+        typeof nestedSchema
+      >
 
-    const fieldOptions = options?.[fieldName]
-    const element = fieldOptions ? handleFieldType(fieldType, fieldOptions) : {}
+      const generatedForm = generateFields(nestedSchema, nestedOptions)
 
-    return {
-      ...defaultOptions,
-      ...element,
+      finalResult.push({ [fieldKey]: generatedForm })
+
+      continue
     }
-  })
+
+    const fieldOptions = options?.[fieldKey]
+    const element = handleFieldValue(fieldKey, fieldValue, fieldOptions)
+
+    finalResult.push(element)
+  }
+
+  return finalResult
 }
 
-export { createOptions, generateFormElementsFromSchema, handleFieldType }
+export { createOptions, generateFields, handleFieldValue }

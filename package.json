@@ -1,17 +1,27 @@
 {
   "name": "zod-to-fields",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Turn your Zod schemas into configurable field arrays for easy integration with HTML, React, Vue, and more.",
-  "main": "dist/index.js",
-  "author": "Wojciech Król",
+  "main": "build/index.js",
+  "author": "Wojciech Król <wojciechkrol97@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/wojtekKrol/zod-to-fields.git",
     "bugs": "https://github.com/wojtekKrol/zod-to-fields/issues"
   },
+  "engines": {
+    "node": ">=18"
+  },
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "default": "./build/index.js"
+    }
+  },
   "files": [
-    "dist",
+    "build",
     "README.md",
     "LICENSE"
   ],
@@ -28,28 +38,26 @@
     "vue",
     "zod"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    }
-  },
   "peerDependencies": {
     "zod": "^3.0.0"
   },
   "scripts": {
+    "dev:react": "pnpm --filter react dev",
+    "dev:vue": "pnpm --filter vue dev",
+    "dev:svelte": "pnpm --filter svelte dev",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
-    "build": "tsc --build tsconfig.build.json && echo 'Build complete'",
-    "freshBuild": "rimraf dist  && tsc --build --incremental tsconfig.build.json",
-    "clean": "rimraf node_modules dist pnpm-lock.yaml",
+    "build": "tsc --project tsconfig.build.json && tsc-alias --project tsconfig.build.json && echo 'Build complete'",
+    "freshBuild": "rimraf build  && pnpm run build",
+    "clean": "rimraf node_modules build pnpm-lock.yaml",
     "lint": "pnpm lint:code && pnpm lint:text && pnpm lint:types",
     "lint:code": "eslint --cache --cache-location node_modules/.cache/eslint --cache-strategy content --ext ts .",
     "lint:text": "prettier --check \"**/*.{json,md,mdx,yml}\"",
-    "lint:types": "pnpm build",
+    "lint:types": "pnpm freshBuild",
     "pretest": "pnpm lint",
     "coverage": "jest --coverage",
     "test": "jest",
-    "prepublishOnly": "pnpm build",
+    "prepublishOnly": "pnpm freshBuild",
     "publishPackage": "pnpm prepublishOnly && pnpm publish --access public"
   },
   "devDependencies": {
@@ -70,6 +78,7 @@
     "rimraf": "5.0.1",
     "ts-jest": "29.1.1",
     "ts-node": "10.9.1",
+    "tsc-alias": "1.8.8",
     "tsup": "7.2.0",
     "typescript": "5.2.2",
     "zod": "^3.0.0"

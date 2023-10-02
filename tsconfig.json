@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     /* Language and Environment */
-    "target": "es2020",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "types": ["jest"],
-    "lib": ["es2020", "dom"],
-    "resolveJsonModule": true,
+    "lib": ["esnext", "dom"],
 
     /* Path Aliases */
     "baseUrl": "./",
@@ -18,19 +17,18 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
 
     /* Emit */
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "build",
     "rootDir": "./src",
 
     /* Optimizations */
-    "skipLibCheck": true,
-    "incremental": true,
-
-    /* Source Maps */
-    "sourceMap": true
+    "skipLibCheck": true, //skip checking .d.ts files
+    "incremental": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+
+  "exclude": ["node_modules", "**/node_modules", "build", "coverage"]
 }
