@@ -14,10 +14,7 @@ function App() {
   const [errors, setErrors] = useState<{ [index: string]: any }>({})
 
   const schema = z.object({
-    name: z
-      .string()
-      .min(3, { message: 'Name too short' })
-      .max(6, { message: 'Name too long' }),
+    name: z.string(),
     lastName: z.string(),
     isAdult: z.boolean(),
     phoneNumber: z.string(),
