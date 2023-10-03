@@ -5,17 +5,14 @@ import type {
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
 
-export type GenericFieldOptions =
+export type GenericSingleFieldOptions =
   | InputBooleanFieldOptions
   | InputStringFieldOptions
   | InputNumberFieldOptions
   | InputEnumFieldOptions
+
+export type GenericFieldOptions =
+  | GenericSingleFieldOptions
   | { [key: string]: FormFieldsArray }
 
 export type FormFieldsArray = Array<GenericFieldOptions>
-
-export type GenericSignleFieldOptions =
-  | InputBooleanFieldOptions
-  | InputStringFieldOptions
-  | InputNumberFieldOptions
-  | InputEnumFieldOptions
