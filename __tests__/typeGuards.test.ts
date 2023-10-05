@@ -11,6 +11,7 @@ import {
   isInputEnumFieldOptions,
   isInputNumberFieldOptions,
   isInputStringFieldOptions,
+  isNestedObjectFieldOptions,
   isObjectOfFormFieldsArrays,
 } from '@/utils/typeGuards'
 
@@ -265,6 +266,63 @@ describe('isInputEnumFieldOptions', () => {
     }
 
     const result = isInputEnumFieldOptions(field)
+    expect(result).toBe(false)
+  })
+})
+
+describe('isNestedObjectFieldOptions', () => {
+  it('should return true for a valid NestedObjectFieldOptions', () => {
+    const nestedObject: NestedObjectFieldOptions = {
+      someKey: {
+        fields: [
+          {
+            tag: 'input',
+            type: 'text',
+            name: 'username',
+            id: 'username',
+            label: 'Your Username',
+          },
+        ],
+      },
+    }
+
+    const result = isNestedObjectFieldOptions(nestedObject)
+    expect(result).toBe(true)
+  })
+
+  it('should return false for an invalid object', () => {
+    const invalidObject = {
+      someKey: {
+        fields: 'invalidValue',
+      },
+    }
+
+    const result = isNestedObjectFieldOptions(invalidObject)
+    expect(result).toBe(false)
+  })
+
+  it('should return false for an empty object', () => {
+    const result = isNestedObjectFieldOptions({})
+    expect(result).toBe(false)
+  })
+
+  it('should return false for null', () => {
+    const result = isNestedObjectFieldOptions(null)
+    expect(result).toBe(false)
+  })
+
+  it('should return false for an array', () => {
+    const result = isNestedObjectFieldOptions([])
+    expect(result).toBe(false)
+  })
+
+  it('should return false for a string', () => {
+    const result = isNestedObjectFieldOptions('string')
+    expect(result).toBe(false)
+  })
+
+  it('should return false for a number', () => {
+    const result = isNestedObjectFieldOptions(42)
     expect(result).toBe(false)
   })
 })

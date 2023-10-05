@@ -1,5 +1,6 @@
 /*eslint @typescript-eslint/no-explicit-any: "off"*/
 import { useState } from 'react'
+import { isNestedObjectFieldOptions, NestedObjectFieldOptions } from 'src'
 import { z } from 'zod'
 import { ztf } from 'zod-to-fields'
 import './App.css'
@@ -63,7 +64,6 @@ function App() {
     .build()
 
   const formFields = ztf.generateFields(schema, options)
-
   const handleInputChange = e => {
     const { name, type, value, checked } = e.target
     setFormValues({
@@ -97,7 +97,9 @@ function App() {
         {isSelect ? (
           <select>
             {field.options?.map(option => (
-              <option value={option.value}>{option.label}</option>
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
             ))}
           </select>
         ) : (
@@ -120,6 +122,11 @@ function App() {
 
   const renderFields = (fields: ztf.FormFieldsArray, level = 1) => {
     return fields.map((field, index) => {
+      console.log(field)
+
+      if (ztf.isNestedObjectFieldOptions(field)) {
+        console.log(field)
+      }
       if (field.tag === 'input' || field.tag === 'select') {
         return renderField(field)
       }

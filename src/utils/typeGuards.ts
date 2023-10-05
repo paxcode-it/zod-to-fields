@@ -32,6 +32,11 @@ export function isNestedObjectFieldOptions(
     return false
   }
 
+  // Check if value is an array or an empty object
+  if (Array.isArray(value) || Object.keys(value).length === 0) {
+    return false
+  }
+
   return Object.values(value).every(
     field =>
       typeof field === 'object' &&
