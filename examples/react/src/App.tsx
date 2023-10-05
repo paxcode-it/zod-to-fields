@@ -63,7 +63,6 @@ function App() {
     .build()
 
   const formFields = ztf.generateFields(schema, options)
-
   const handleInputChange = e => {
     const { name, type, value, checked } = e.target
     setFormValues({
@@ -71,7 +70,6 @@ function App() {
       [name]: type === 'checkbox' ? checked : value,
     })
   }
-
   const handleSubmit = e => {
     e.preventDefault()
     const result = schema.safeParse(formValues)
@@ -84,7 +82,7 @@ function App() {
     }
   }
 
-  const renderField = (field: ztf.GenericSignleFieldOptions) => {
+  const renderField = (field: ztf.GenericSingleFieldOptions) => {
     const error = errors[field.name]
 
     const isSelect = field.tag === 'select'
@@ -97,7 +95,9 @@ function App() {
         {isSelect ? (
           <select>
             {field.options?.map(option => (
-              <option value={option.value}>{option.label}</option>
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
             ))}
           </select>
         ) : (
@@ -120,6 +120,10 @@ function App() {
 
   const renderFields = (fields: ztf.FormFieldsArray, level = 1) => {
     return fields.map((field, index) => {
+      if (ztf.isNestedObjectFieldOptions(field)) {
+      }
+      console.log(field)
+
       if (field.tag === 'input' || field.tag === 'select') {
         return renderField(field)
       }

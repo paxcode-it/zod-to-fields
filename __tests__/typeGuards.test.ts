@@ -11,6 +11,7 @@ import {
   isInputEnumFieldOptions,
   isInputNumberFieldOptions,
   isInputStringFieldOptions,
+  isNestedObjectFieldOptions,
   isObjectOfFormFieldsArrays,
 } from '@/utils/typeGuards'
 
@@ -266,5 +267,131 @@ describe('isInputEnumFieldOptions', () => {
 
     const result = isInputEnumFieldOptions(field)
     expect(result).toBe(false)
+  })
+})
+
+describe('isNestedObjectFieldOptions', () => {
+  it('should return true for a valid NestedObjectFieldOptions', () => {
+    const nestedObject: NestedObjectFieldOptions = {
+      someKey: {
+        fields: [
+          {
+            tag: 'input',
+            type: 'text',
+            name: 'username',
+            id: 'username',
+            label: 'Your Username',
+          },
+        ],
+      },
+    }
+
+    const result = isNestedObjectFieldOptions(nestedObject)
+    expect(result).toBe(true)
+  })
+
+  it('should return false for an invalid object', () => {
+    const invalidObject = {
+      someKey: {
+        fields: 'invalidValue',
+      },
+    }
+
+    const result = isNestedObjectFieldOptions(invalidObject)
+    expect(result).toBe(false)
+  })
+
+  it('should return false for an empty object', () => {
+    const result = isNestedObjectFieldOptions({})
+    expect(result).toBe(false)
+  })
+
+  it('should return false for null', () => {
+    const result = isNestedObjectFieldOptions(null)
+    expect(result).toBe(false)
+  })
+
+  it('should return false for an array', () => {
+    const result = isNestedObjectFieldOptions([])
+    expect(result).toBe(false)
+  })
+
+  it('should return false for a string', () => {
+    const result = isNestedObjectFieldOptions('string')
+    expect(result).toBe(false)
+  })
+
+  it('should return false for a number', () => {
+    const result = isNestedObjectFieldOptions(42)
+    expect(result).toBe(false)
+  })
+  it('should return true for a "test" object', () => {
+    // Arrange
+    const doubleNestedFields = {
+      fields: [
+        {
+          firstLeveLFields: {
+            fields: [
+              {
+                id: 'firstLeveLFields',
+                label: 'firstLeveLFields',
+                name: 'firstLeveLFields',
+                tag: 'input',
+                inputMode: 'numeric',
+                type: 'number',
+              },
+              {
+                secondLeveLFields: {
+                  fields: [
+                    {
+                      id: 'secondLeveLFields',
+                      label: 'secondLeveLFields',
+                      name: 'secondLeveLFields',
+                      tag: 'input',
+                      inputMode: 'numeric',
+                      type: 'number',
+                    },
+                  ],
+                },
+              },
+              {
+                id: 'latitude',
+                label: 'Latitude',
+                name: 'latitude',
+                tag: 'input',
+                inputMode: 'numeric',
+                type: 'number',
+              },
+            ],
+          },
+        },
+        {
+          id: 'street',
+          label: 'Street nested',
+          name: 'street',
+          tag: 'input',
+          type: 'text',
+        },
+        {
+          id: 'city',
+          label: 'City',
+          name: 'city',
+          tag: 'input',
+          type: 'text',
+        },
+        {
+          id: 'zip',
+          label: 'Zip',
+          name: 'zip',
+          tag: 'input',
+          type: 'text',
+        },
+      ],
+    }
+    // Act
+    const result = isNestedObjectFieldOptions(doubleNestedFields)
+
+    // Assert
+    expect(result).toBe(true)
   })
 })

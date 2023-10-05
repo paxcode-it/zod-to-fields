@@ -1,8 +1,8 @@
 import {
   InputBooleanFieldOptions,
-  InputStringFieldOptions,
-  InputNumberFieldOptions,
   InputEnumFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
 } from '@/types/FieldOptions'
 import {
   FormFieldsArray,
@@ -15,6 +15,16 @@ export function isFormFieldsArray(value: unknown): value is FormFieldsArray {
   if (!Array.isArray(value)) return false
 
   for (const elem of value) {
+    const keyOfElem = Object.keys(elem)[0]
+    const isNestedObjectWithFields =
+      Object.keys(elem).length === 1 && 'fields' in elem[keyOfElem]
+
+    if (
+      isNestedObjectWithFields &&
+      isNestedObjectFieldOptions(elem[keyOfElem])
+    ) {
+      continue
+    }
     if (!isGenericSingleFieldOptions(elem)) {
       // Could add more checks for NestedObjectFieldOptions if needed.
       return false
@@ -26,18 +36,64 @@ export function isFormFieldsArray(value: unknown): value is FormFieldsArray {
 
 // Checking if the value is a NestedObjectFieldOptions
 export function isNestedObjectFieldOptions(
-  value: unknown
+  value: unknown,
+  debugging?: boolean
 ): value is NestedObjectFieldOptions {
+  if (debugging) {
+    console.log('Checking: ', value)
+  }
+
   if (typeof value !== 'object' || value === null) {
+    if (debugging) {
+      console.log('First check failed: Not an object or null')
+    }
+
     return false
   }
 
-  return Object.values(value).every(
-    field =>
-      typeof field === 'object' &&
-      'fields' in field &&
-      isFormFieldsArray(field.fields)
-  )
+  if (Array.isArray(value) || Object.keys(value).length === 0) {
+    if (debugging) {
+      console.log('Second check failed: Is an array or empty object')
+    }
+
+    return false
+  }
+
+  const isMainObjectHaveOneKey = Object.keys(value).length === 1
+  const keyOfElem = Object.keys(value)[0]
+
+  const fieldsNested = (value as NestedObjectFieldOptions)[keyOfElem]
+
+  const hasFieldsNested = isMainObjectHaveOneKey && 'fields' in fieldsNested
+  const isObject = typeof value === 'object'
+  const hasFields = hasFieldsNested || 'fields' in value
+
+  const isFormFieldsArrayPass =
+    hasFields &&
+    isFormFieldsArray(
+      hasFieldsNested
+        ? fieldsNested.fields
+        : (value as { fields: FormFieldsArray }).fields
+    )
+
+  if (debugging) {
+    // console.log('isMainObjectHaveOneKey: ', isMainObjectHaveOneKey)
+    // console.log('keyOfElem: ', keyOfElem)
+    // console.log('fieldsNested: ', fieldsNested)
+    // console.log('hasFieldsNested: ', hasFieldsNested)
+    // console.log('hasFields: ', hasFields)
+    console.log(`Element ${isObject ? 'Is an object' : 'Is not an object'}`)
+    console.log(`Element ${hasFields ? 'Has fields' : 'Does not have fields'}`)
+    console.log(
+      `Element ${
+        isFormFieldsArrayPass
+          ? 'Is a FormFieldsArray'
+          : 'Is not a FormFieldsArray'
+      }`
+    )
+  }
+
+  return isObject && hasFields && isFormFieldsArrayPass
 }
 
 // Checking if the value is a GenericSingleFieldOptions
