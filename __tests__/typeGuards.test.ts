@@ -2,17 +2,20 @@ import {
   FormFieldsArray,
   GenericFieldOptions,
   GenericSingleFieldOptions,
+  NestedObjectFieldOptions,
 } from '@/types/FormFieldsArray'
 import {
   isFormFieldsArray,
   isGenericSingleFieldOptions,
   isInputBooleanFieldOptions,
+  isInputEnumFieldOptions,
+  isInputNumberFieldOptions,
   isInputStringFieldOptions,
   isObjectOfFormFieldsArrays,
 } from '@/utils/typeGuards'
 
 describe('isFormFieldsArray', () => {
-  it('should return true for an empty array', () => {
+  it('should return false for an array of empty objects', () => {
     // Arrange
     const arr: FormFieldsArray = [{}, {}]
 
@@ -20,25 +23,27 @@ describe('isFormFieldsArray', () => {
     const result = isFormFieldsArray(arr)
 
     // Assert
-    expect(result).toBe(true)
+    expect(result).toBe(false)
   })
 
   it('should return true for a valid FormFieldsArray', () => {
     // Arrange
-    const arr: { [key: string]: FormFieldsArray } = {
-      someKy: [
-        {
-          name: 'someName',
-          label: 'someLabel',
-          id: 'someId',
-          tag: 'input',
-          type: 'text',
-        },
-      ],
+    const arr: NestedObjectFieldOptions = {
+      someKy: {
+        fields: [
+          {
+            name: 'someName',
+            label: 'someLabel',
+            id: 'someId',
+            tag: 'input',
+            type: 'text',
+          },
+        ],
+      },
     }
 
     // Act
-    const result = isFormFieldsArray(arr)
+    const result = isFormFieldsArray(arr.someKy.fields)
 
     // Assert
     expect(result).toBe(true)
@@ -200,6 +205,66 @@ describe('isInputBooleanFieldOptions', () => {
 
     const result = isInputBooleanFieldOptions(field)
 
+    expect(result).toBe(false)
+  })
+})
+
+describe('isInputNumberFieldOptions', () => {
+  it('should return true for a valid InputNumberFieldOptions object', () => {
+    const field: GenericSingleFieldOptions = {
+      tag: 'input',
+      type: 'number',
+      name: 'age',
+      id: 'age',
+      label: 'Your Age',
+    }
+
+    const result = isInputNumberFieldOptions(field)
+    expect(result).toBe(true)
+  })
+
+  it('should return false for an invalid object', () => {
+    const field: GenericSingleFieldOptions = {
+      tag: 'input',
+      type: 'text',
+      name: 'username',
+      id: 'username',
+      label: 'Your Username',
+    }
+
+    const result = isInputNumberFieldOptions(field)
+    expect(result).toBe(false)
+  })
+})
+
+describe('isInputEnumFieldOptions', () => {
+  it('should return true for a valid InputEnumFieldOptions object', () => {
+    const field: GenericSingleFieldOptions = {
+      tag: 'select',
+      type: 'select',
+      name: 'color',
+      id: 'color',
+      label: 'Your Favorite Color',
+      options: [
+        { value: 'red', label: 'Red' },
+        { value: 'blue', label: 'Blue' },
+      ],
+    }
+
+    const result = isInputEnumFieldOptions(field)
+    expect(result).toBe(true)
+  })
+
+  it('should return false for an invalid object', () => {
+    const field: GenericSingleFieldOptions = {
+      tag: 'input',
+      type: 'text',
+      name: 'username',
+      id: 'username',
+      label: 'Your Username',
+    }
+
+    const result = isInputEnumFieldOptions(field)
     expect(result).toBe(false)
   })
 })

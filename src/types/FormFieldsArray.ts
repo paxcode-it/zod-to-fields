@@ -11,8 +11,14 @@ export type GenericSingleFieldOptions =
   | InputNumberFieldOptions
   | InputEnumFieldOptions
 
+export type NestedObjectFieldOptions = {
+  [key: string]: {
+    fields: FormFieldsArray
+    description?: string
+  }
+}
 export type GenericFieldOptions =
   | GenericSingleFieldOptions
-  | { [key: string]: FormFieldsArray }
+  | NestedObjectFieldOptions
 
 export type FormFieldsArray = Array<GenericFieldOptions>
