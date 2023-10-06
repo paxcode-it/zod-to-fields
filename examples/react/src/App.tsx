@@ -1,5 +1,7 @@
 /*eslint @typescript-eslint/no-explicit-any: "off"*/
-import { useState } from 'react'
+import get from 'lodash.get'
+import set from 'lodash.set'
+import { ChangeEvent, useState } from 'react'
 import { z } from 'zod'
 import { ztf } from 'zod-to-fields'
 import './App.css'
@@ -14,22 +16,34 @@ function App() {
   const [errors, setErrors] = useState<{ [index: string]: any }>({})
 
   const schema = z.object({
-    name: z.string(),
-    lastName: z.string(),
+    name: z.string().min(1, { message: 'name can not be empty.' }),
+    lastName: z.string().min(1, { message: 'lastName can not be empty.' }),
     isAdult: z.boolean(),
-    phoneNumber: z.string(),
+    phoneNumber: z
+      .string()
+      .min(1, { message: 'phoneNumber can not be empty.' }),
     currency: z.enum(['USD', 'EUR', 'GBP']),
     colors: z.nativeEnum(Colors),
     email: z.string(),
-    address: z.object({
-      location: z.object({
-        longitude: z.number(),
-        latitude: z.number(),
-      }),
-      street: z.string(),
-      city: z.string(),
-      zip: z.string(),
-    }),
+    address: z.object(
+      {
+        country: z.string().min(1, { message: 'Country can not be empty.' }),
+        location: z.object({
+          longitude: z
+            .string()
+            .min(1, { message: 'longitude can not be empty.' }),
+          latitude: z
+            .string()
+            .min(1, { message: 'latitude can not be empty.' }),
+        }),
+        street: z.string().min(1, { message: 'street can not be empty.' }),
+        city: z.string().min(1, { message: 'city can not be empty.' }),
+        zip: z.string().min(1, { message: 'zip can not be empty.' }),
+      },
+      {
+        description: 'Custom label Address',
+      }
+    ),
   })
 
   const options = ztf
@@ -63,30 +77,32 @@ function App() {
     .build()
 
   const formFields = ztf.generateFields(schema, options)
-
-  const handleInputChange = e => {
-    const { name, type, value, checked } = e.target
-    setFormValues({
-      ...formValues,
-      [name]: type === 'checkbox' ? checked : value,
-    })
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldKey: string
+  ) => {
+    const { type, value, checked } = e.target
+    setFormValues(prevState => ({
+      ...prevState,
+      ...set(prevState, fieldKey, type === 'checkbox' ? checked : value),
+    }))
   }
 
   const handleSubmit = e => {
     e.preventDefault()
+
     const result = schema.safeParse(formValues)
+    console.log(result)
     if (result.success) {
-      console.log('Form is valid:', result.data)
       setErrors({})
     } else {
-      console.log('Form errors:', result.error.formErrors.fieldErrors)
       setErrors(result.error.formErrors.fieldErrors)
     }
   }
 
-  const renderField = (field: ztf.GenericSignleFieldOptions) => {
-    const error = errors[field.name]
-
+  const renderField = (field: ztf.GenericSingleFieldOptions, key = '') => {
+    const fieldKey = key ? `${key}.${field.name}` : field.name
+    const error = get(errors, fieldKey)
     const isSelect = field.tag === 'select'
 
     return (
@@ -97,7 +113,9 @@ function App() {
         {isSelect ? (
           <select>
             {field.options?.map(option => (
-              <option value={option.value}>{option.label}</option>
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
             ))}
           </select>
         ) : (
@@ -108,38 +126,47 @@ function App() {
             className={
               field.type !== 'checkbox' ? 'form-input' : 'form-checkbox'
             }
-            onChange={handleInputChange}
-            value={formValues[field.name as string] || ''}
+            onChange={e => handleInputChange(e, fieldKey)}
+            value={get(formValues, fieldKey) || ''}
           />
         )}
-
-        {error && <p className='form-error'>{error}</p>}
+        <div className='errorContainer'>
+          {error && <p className='form-error'>{error}</p>}
+        </div>
       </div>
     )
   }
 
-  const renderFields = (fields: ztf.FormFieldsArray, level = 1) => {
+  const renderFields = (
+    fields: ztf.FormFieldsArray,
+    level = 1,
+    parentKey = ''
+  ) => {
     return fields.map((field, index) => {
-      if (field.tag === 'input' || field.tag === 'select') {
-        return renderField(field)
+      if (ztf.isNestedObjectFieldOptions(field)) {
+        return Object.keys(field).map(key => {
+          const potentialArray = field[key].fields
+          const newKey = parentKey ? `${parentKey}.${key}` : key
+
+          if (ztf.isFormFieldsArray(potentialArray)) {
+            return (
+              <div
+                className={`form-nested level-${level}`}
+                key={`${key}_${index}`}
+              >
+                <h3>{field[key].description || key.toUpperCase()}</h3>
+                {renderFields(potentialArray, level + 1, newKey)}
+              </div>
+            )
+          }
+
+          return null
+        })
       }
 
-      return Object.keys(field).map(key => {
-        const potentialArray = field[key]
-        if (ztf.isFormFieldsArray(potentialArray)) {
-          return (
-            <div
-              className={`form-nested level-${level}`}
-              key={`${key}_${index}`}
-            >
-              <h3>{key.toUpperCase()}</h3>
-              {renderFields(potentialArray, level + 1)}
-            </div>
-          )
-        }
-
-        return null
-      })
+      if (field.tag === 'input' || field.tag === 'select') {
+        return renderField(field, parentKey)
+      }
     })
   }
 

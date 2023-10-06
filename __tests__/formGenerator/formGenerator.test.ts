@@ -153,15 +153,18 @@ describe('formGenerator', () => {
       // Arrange
       const schema = z.object({
         surname: z.string(),
-        address: z.object({
-          street: z.string(),
-          city: z.string(),
-          code: z.number(),
-          subAddress: z.object({
-            subStreet: z.string(),
-          }),
-          country: z.string(),
-        }),
+        address: z.object(
+          {
+            street: z.string(),
+            city: z.string(),
+            code: z.number(),
+            subAddress: z.object({
+              subStreet: z.string(),
+            }),
+            country: z.string(),
+          },
+          { description: 'Address' }
+        ),
         name: z.string(),
       })
 
@@ -180,48 +183,53 @@ describe('formGenerator', () => {
           type: 'text',
         },
         {
-          address: [
-            {
-              id: 'street',
-              label: 'Street',
-              name: 'street',
-              tag: 'input',
-              type: 'text',
-            },
-            {
-              id: 'city',
-              label: 'City',
-              name: 'city',
-              tag: 'input',
-              type: 'text',
-            },
-            {
-              id: 'code',
-              inputMode: 'numeric',
-              label: 'Code',
-              name: 'code',
-              tag: 'input',
-              type: 'number',
-            },
-            {
-              subAddress: [
-                {
-                  id: 'subStreet',
-                  label: 'SubStreet',
-                  name: 'subStreet',
-                  tag: 'input',
-                  type: 'text',
+          address: {
+            description: 'Address',
+            fields: [
+              {
+                id: 'street',
+                label: 'Street',
+                name: 'street',
+                tag: 'input',
+                type: 'text',
+              },
+              {
+                id: 'city',
+                label: 'City',
+                name: 'city',
+                tag: 'input',
+                type: 'text',
+              },
+              {
+                id: 'code',
+                inputMode: 'numeric',
+                label: 'Code',
+                name: 'code',
+                tag: 'input',
+                type: 'number',
+              },
+              {
+                subAddress: {
+                  fields: [
+                    {
+                      id: 'subStreet',
+                      label: 'SubStreet',
+                      name: 'subStreet',
+                      tag: 'input',
+                      type: 'text',
+                    },
+                  ],
                 },
-              ],
-            },
-            {
-              id: 'country',
-              label: 'Country',
-              name: 'country',
-              tag: 'input',
-              type: 'text',
-            },
-          ],
+              },
+              {
+                id: 'country',
+                label: 'Country',
+                name: 'country',
+                tag: 'input',
+                type: 'text',
+              },
+            ],
+          },
         },
         {
           id: 'name',

@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lodash.get": "4.4.2",
+    "lodash.set": "4.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "zod-to-fields": "workspace:*"
+    "zod-to-fields": "workspace:*",
+    "zod": "3.22.4"
   },
   "devDependencies": {
+    "@types/lodash.get": "4.4.7",
+    "@types/lodash.set": "4.3.7",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

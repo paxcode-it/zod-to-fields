@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { EnumLike, z } from 'zod'
 
 import type {
   InputBooleanFieldOptions,
@@ -16,6 +16,14 @@ import {
   handleZodString,
 } from '@/utils/fieldHandlers'
 import { setDefaultOptions } from '@/utils/formHelpers'
+import {
+  isZodBoolean,
+  isZodEnum,
+  isZodNativeEnum,
+  isZodNumber,
+  isZodString,
+} from '@/utils/typeGuards/zodTypeGuards'
+import { unwrapZodType } from '@/utils/zodHelpers'
 
 /**
  * Handles the conversion of Zod types to appropriate field options.
@@ -25,24 +33,39 @@ import { setDefaultOptions } from '@/utils/formHelpers'
  * @throws Will throw an error if the Zod type is unsupported.
  * @returns {GenericFieldOptions} - Returns the corresponding field element.
  */
-function handleFieldValue<T extends z.AnyZodObject>(
+
+function handleFieldValue<
+  T extends z.AnyZodObject,
+  K extends [string, ...string[]],
+  P extends EnumLike,
+>(
   fieldKey: string,
   fieldValue: z.ZodTypeAny,
   fieldOptions?: GenericFieldOptions | FieldValueToOptions<T>
 ): GenericFieldOptions {
   const defaultOptions = setDefaultOptions(fieldKey, fieldValue)
   const options = { ...defaultOptions, ...fieldOptions }
-  if (fieldValue instanceof z.ZodString) {
+
+  const baseType = unwrapZodType(fieldValue)
+
+  if (isZodString(baseType)) {
     return handleZodString(options as InputStringFieldOptions)
-  } else if (fieldValue instanceof z.ZodNumber) {
+  } else if (isZodNumber(baseType)) {
     return handleZodNumber(options as InputNumberFieldOptions)
-  } else if (fieldValue instanceof z.ZodBoolean) {
+  } else if (isZodBoolean(baseType)) {
     return handleZodBoolean(options as InputBooleanFieldOptions)
-  } else if (fieldValue instanceof z.ZodEnum) {
-    return handleZodEnum(options as InputEnumFieldOptions, fieldValue)
-  } else if (fieldValue instanceof z.ZodNativeEnum) {
-    return handleNativeZodEnum(options as InputEnumFieldOptions, fieldValue)
+  } else if (isZodEnum(baseType)) {
+    return handleZodEnum(
+      options as InputEnumFieldOptions,
+      fieldValue as z.ZodEnum<K>
+    )
+  } else if (isZodNativeEnum(baseType)) {
+    return handleNativeZodEnum(
+      options as InputEnumFieldOptions,
+      fieldValue as z.ZodNativeEnum<P>
+    )
   }
+
   throw new Error(`Unsupported Zod type`)
 }
 
@@ -94,6 +117,8 @@ const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
   const finalResult: FormFieldsArray = []
   for (const [fieldKey, fieldValue] of Object.entries(schema.shape)) {
     if (fieldValue instanceof z.ZodObject) {
+      const description = fieldValue.description
+
       const nestedSchema = fieldValue
       const nestedOptions = options?.[fieldKey] as MappedFieldOptions<
         typeof nestedSchema
@@ -101,7 +126,7 @@ const generateFields = <T extends z.ZodRawShape, K extends z.AnyZodObject>(
 
       const generatedForm = generateFields(nestedSchema, nestedOptions)
 
-      finalResult.push({ [fieldKey]: generatedForm })
+      finalResult.push({ [fieldKey]: { fields: generatedForm, description } })
 
       continue
     }
