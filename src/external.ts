@@ -9,4 +9,4 @@ export * from '@/utils/formGenerator'
 export * from '@/utils/zodHelpers'
 
 // Re-export type guards
-export * from '@/utils/typeGuards'
+export * from '@/utils/typeGuards/formFieldGuards'

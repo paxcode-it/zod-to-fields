@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   InputBooleanFieldOptions,
   InputEnumFieldOptions,
@@ -11,7 +12,7 @@ import {
   NestedObjectFieldOptions,
 } from '@/types/FormFieldsArray'
 
-export function isFormFieldsArray(value: unknown): value is FormFieldsArray {
+function isFormFieldsArray(value: unknown): value is FormFieldsArray {
   if (!Array.isArray(value)) return false
 
   for (const elem of value) {
@@ -35,7 +36,7 @@ export function isFormFieldsArray(value: unknown): value is FormFieldsArray {
 }
 
 // Checking if the value is a NestedObjectFieldOptions
-export function isNestedObjectFieldOptions(
+function isNestedObjectFieldOptions(
   value: unknown,
   debugging?: boolean
 ): value is NestedObjectFieldOptions {
@@ -97,7 +98,7 @@ export function isNestedObjectFieldOptions(
 }
 
 // Checking if the value is a GenericSingleFieldOptions
-export function isGenericSingleFieldOptions(
+function isGenericSingleFieldOptions(
   value: GenericFieldOptions
 ): value is GenericSingleFieldOptions {
   return (
@@ -109,7 +110,7 @@ export function isGenericSingleFieldOptions(
 }
 
 // Specific checks for subtypes
-export function isInputBooleanFieldOptions(
+function isInputBooleanFieldOptions(
   value: GenericSingleFieldOptions
 ): value is InputBooleanFieldOptions {
   return (
@@ -118,7 +119,7 @@ export function isInputBooleanFieldOptions(
   )
 }
 
-export function isInputStringFieldOptions(
+function isInputStringFieldOptions(
   value: GenericSingleFieldOptions
 ): value is InputStringFieldOptions {
   return (
@@ -127,20 +128,20 @@ export function isInputStringFieldOptions(
   )
 }
 
-export function isInputNumberFieldOptions(
+function isInputNumberFieldOptions(
   value: GenericSingleFieldOptions
 ): value is InputNumberFieldOptions {
   return value.tag === 'input' && value.type === 'number'
 }
 
-export function isInputEnumFieldOptions(
+function isInputEnumFieldOptions(
   value: GenericSingleFieldOptions
 ): value is InputEnumFieldOptions {
   return value.tag === 'select' && Array.isArray(value.options)
 }
 
 // Checking if the value is an object containing FormFieldsArrays
-export function isObjectOfFormFieldsArrays(
+function isObjectOfFormFieldsArrays(
   value: unknown
 ): value is { [key: string]: FormFieldsArray } {
   if (typeof value !== 'object' || value === null) {
@@ -148,4 +149,15 @@ export function isObjectOfFormFieldsArrays(
   }
 
   return Object.values(value).every(isFormFieldsArray)
+}
+
+export {
+  isFormFieldsArray,
+  isNestedObjectFieldOptions,
+  isGenericSingleFieldOptions,
+  isInputBooleanFieldOptions,
+  isInputStringFieldOptions,
+  isInputNumberFieldOptions,
+  isInputEnumFieldOptions,
+  isObjectOfFormFieldsArrays,
 }

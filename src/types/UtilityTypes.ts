@@ -26,3 +26,11 @@ export type FieldValueToOptions<T> = T extends z.ZodBoolean
 export type MappedFieldOptions<T extends z.AnyZodObject> = {
   [K in keyof T['shape']]?: FieldValueToOptions<T['shape'][K]>
 }
+
+export type UnwrapZodType<T extends z.ZodTypeAny> = T extends {
+  _def: { innerType: infer U }
+}
+  ? U extends z.ZodTypeAny
+    ? UnwrapZodType<U>
+    : T
+  : T

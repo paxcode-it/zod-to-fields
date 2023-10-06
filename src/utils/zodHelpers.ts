@@ -1,4 +1,13 @@
-import { ZodObject, ZodNullable, ZodArray, ZodOptional, ZodTypeAny } from 'zod'
+import {
+  ZodObject,
+  ZodNullable,
+  ZodArray,
+  ZodOptional,
+  ZodTypeAny,
+  z,
+} from 'zod'
+
+import { UnwrapZodType } from '@/types/UtilityTypes'
 
 /**
  * Recursively retrieves the keys of a Zod schema including nested keys.
@@ -45,4 +54,16 @@ const zodKeys = (schema: ZodTypeAny, parentKey: string = ''): string[] => {
   return [parentKey].filter(Boolean)
 }
 
-export { zodKeys }
+const unwrapZodType = <T extends z.ZodTypeAny>(
+  zodType: T
+): UnwrapZodType<T> => {
+  let unwrappedType: z.ZodTypeAny = zodType
+
+  while (unwrappedType._def && unwrappedType._def.innerType) {
+    unwrappedType = unwrappedType._def.innerType
+  }
+
+  return unwrappedType as UnwrapZodType<T>
+}
+
+export { zodKeys, unwrapZodType }

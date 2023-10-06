@@ -13,7 +13,7 @@ import {
   isInputStringFieldOptions,
   isNestedObjectFieldOptions,
   isObjectOfFormFieldsArrays,
-} from '@/utils/typeGuards'
+} from '@/utils/typeGuards/formFieldGuards'
 
 describe('isFormFieldsArray', () => {
   it('should return false for an array of empty objects', () => {
