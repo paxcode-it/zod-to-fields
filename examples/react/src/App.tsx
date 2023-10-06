@@ -76,7 +76,7 @@ function App() {
     })
     .build()
 
-  const formFields = ztf.generateFields(schema)
+  const formFields = ztf.generateFields(schema, options)
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement>,
     fieldKey: string
@@ -99,61 +99,7 @@ function App() {
       setErrors(result.error.formErrors.fieldErrors)
     }
   }
-  const FormData = z.object({
-    name: z.string(),
-    contactInfo: z.object({
-      nested: z.object({
-        email: z.string(),
-        phone: z.string(),
-      }),
-      email: z.string(),
-      phone: z.string(),
-    }),
-  })
 
-  const schema2 = z.object({
-    name: z.string().min(1, { message: 'name can not be empty.' }).default(''),
-    lastName: z
-      .string()
-      .min(1, { message: 'lastName can not be empty.' })
-      .default(''),
-    isAdult: z.boolean(),
-    phoneNumber: z
-      .string()
-      .min(1, { message: 'phoneNumber can not be empty.' }),
-    currency: z.enum(['USD', 'EUR', 'GBP']),
-    colors: z.nativeEnum(Colors),
-    email: z.string().default(''),
-    address: z.object({
-      country: z
-        .string()
-        .min(1, { message: 'Country can not be empty.' })
-        .default(''),
-      location: z.object({
-        longitude: z
-          .string()
-          .min(1, { message: 'longitude can not be empty.' })
-          .default(''),
-        latitude: z
-          .string()
-          .min(1, { message: 'latitude can not be empty.' })
-          .default(''),
-      }),
-      street: z.string().min(1, { message: 'street can not be empty.' }),
-      city: z.string().min(1, { message: 'city can not be empty.' }),
-      zip: z.string().min(1, { message: 'zip can not be empty.' }),
-    }),
-  })
-
-  const result = schema2.safeParse({
-    address: {
-      location: {},
-    },
-  })
-
-  if (!result.success) {
-    console.log(result.error.format())
-  }
   const renderField = (field: ztf.GenericSingleFieldOptions, key = '') => {
     const fieldKey = key ? `${key}.${field.name}` : field.name
     const error = get(errors, fieldKey)
