@@ -77,7 +77,11 @@ describe('handleFieldValue function', () => {
       name: 'colors',
       tag: 'select',
       type: 'select',
-      options: [],
+      options: [
+        { label: 'Red', value: 'Red' },
+        { label: 'Green', value: 'Green' },
+        { label: 'Blue', value: 'Blue' },
+      ],
     }
 
     // Act

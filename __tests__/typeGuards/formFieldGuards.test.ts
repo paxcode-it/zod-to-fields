@@ -289,6 +289,46 @@ describe('isNestedObjectFieldOptions', () => {
     const result = isNestedObjectFieldOptions(nestedObject)
     expect(result).toBe(true)
   })
+  it('should return true for a valid NestedObjectFieldOptions with Enum', () => {
+    const nestedObject: NestedObjectFieldOptions = {
+      phoneNumbers: {
+        fields: [
+          {
+            type: 'select',
+            id: 'type',
+            label: 'Type',
+            name: 'type',
+            tag: 'select',
+            options: [
+              {
+                label: 'Mobile',
+                value: 'Mobile',
+              },
+              {
+                label: 'Home',
+                value: 'Home',
+              },
+              {
+                label: 'Work',
+                value: 'Work',
+              },
+            ],
+          },
+          {
+            id: 'number',
+            label: 'Number',
+            name: 'number',
+            tag: 'input',
+            type: 'text',
+          },
+        ],
+        description: 'Phone Number',
+      },
+    }
+
+    const result = isNestedObjectFieldOptions(nestedObject)
+    expect(result).toBe(true)
+  })
 
   it('should return false for an invalid object', () => {
     const invalidObject = {
@@ -325,6 +365,12 @@ describe('isNestedObjectFieldOptions', () => {
     const result = isNestedObjectFieldOptions(42)
     expect(result).toBe(false)
   })
+
+  it('should return true for a number', () => {
+    const result = isNestedObjectFieldOptions(42)
+    expect(result).toBe(false)
+  })
+
   it('should return true for a "test" object', () => {
     // Arrange
     const doubleNestedFields = {
