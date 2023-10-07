@@ -40,7 +40,11 @@ const handleZodEnum = <T extends [string, ...string[]]>(
 
   if (fieldOptions.tag === 'select') {
     // handle select
-    return { ...fieldOptions, options: fieldOptions.options ?? options }
+    return {
+      ...fieldOptions,
+      options: fieldOptions.options ?? options,
+      type: fieldOptions.type ?? 'select',
+    }
   } else {
     // handle radio
     return {

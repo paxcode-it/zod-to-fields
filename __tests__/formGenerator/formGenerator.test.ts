@@ -84,6 +84,7 @@ describe('formGenerator', () => {
           label: 'Colors',
           name: 'colors',
           tag: 'select',
+          type: 'select',
           options: [
             { value: 'Red', label: 'Red' },
             { value: 'Green', label: 'Green' },
@@ -108,6 +109,7 @@ describe('formGenerator', () => {
           label: 'Colors',
           name: 'colors',
           tag: 'select',
+          type: 'select',
           options: [
             { value: 'Red', label: 'Red' },
             { value: 'Green', label: 'Green' },
