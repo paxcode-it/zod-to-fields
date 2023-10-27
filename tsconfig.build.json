@@ -3,5 +3,12 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./build/.tsbuildinfo"
   },
-  "exclude": ["__tests__", "examples"]
+  "exclude": [
+    "__tests__",
+    "examples",
+    "node_modules",
+    "**/node_modules",
+    "build",
+    "coverage"
+  ]
 }
