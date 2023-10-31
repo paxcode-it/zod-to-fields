@@ -92,7 +92,6 @@ function App() {
     e.preventDefault()
 
     const result = schema.safeParse(formValues)
-    console.log(result)
     if (result.success) {
       setErrors({})
     } else {

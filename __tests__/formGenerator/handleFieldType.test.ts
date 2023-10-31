@@ -1,3 +1,4 @@
+import validator from 'validator'
 import * as z from 'zod'
 
 import {
@@ -171,6 +172,28 @@ describe('handleFieldValue function with methods', () => {
       name: 'isActive',
       tag: 'input',
       type: 'checkbox',
+    }
+
+    // Act
+    const result = handleFieldValue(fieldKey, fieldValue, fieldOptions)
+
+    // Assert
+    expect(result).toEqual(fieldOptions)
+  })
+
+  it('should handle ZodString with custom validation => refine()', () => {
+    // Arrange
+    const fieldKey = 'name'
+    const fieldValue = z.string().refine(validator.isMobilePhone, {
+      message: 'Must be a valid phone number',
+    })
+
+    const fieldOptions: InputStringFieldOptions = {
+      id: 'name',
+      label: 'Name',
+      name: 'name',
+      tag: 'input',
+      type: 'text',
     }
 
     // Act

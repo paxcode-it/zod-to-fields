@@ -59,8 +59,14 @@ const unwrapZodType = <T extends z.ZodTypeAny>(
 ): UnwrapZodType<T> => {
   let unwrappedType: z.ZodTypeAny = zodType
 
-  while (unwrappedType._def && unwrappedType._def.innerType) {
-    unwrappedType = unwrappedType._def.innerType
+  while (unwrappedType._def) {
+    if (unwrappedType._def.innerType) {
+      unwrappedType = unwrappedType._def.innerType
+    } else if (unwrappedType._def.effect && unwrappedType._def.schema) {
+      unwrappedType = unwrappedType._def.schema
+    } else {
+      break
+    }
   }
 
   return unwrappedType as UnwrapZodType<T>
