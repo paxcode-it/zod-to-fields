@@ -1,14 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./build/.tsbuildinfo"
+    "outDir": "lib/esm"
   },
   "exclude": [
     "__tests__",
     "examples",
     "node_modules",
     "**/node_modules",
-    "build",
+    "lib",
     "coverage"
   ]
 }

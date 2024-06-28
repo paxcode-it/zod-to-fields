@@ -1,12 +1,13 @@
 import { z } from 'zod'
 
+import { MappedFieldOptions } from '@/types/UtilityTypes'
+import { createOptions, generateFields } from '@/utils/formGenerator'
+
 import type {
   InputBooleanFieldOptions,
   InputNumberFieldOptions,
   InputStringFieldOptions,
 } from '@/types/FieldOptions'
-import { MappedFieldOptions } from '@/types/UtilityTypes'
-import { createOptions, generateFields } from '@/utils/formGenerator'
 
 describe('formGenerator', () => {
   describe('generateFields', () => {

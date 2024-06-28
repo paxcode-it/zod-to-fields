@@ -1,11 +1,5 @@
 import { EnumLike, z } from 'zod'
 
-import type {
-  InputBooleanFieldOptions,
-  InputEnumFieldOptions,
-  InputNumberFieldOptions,
-  InputStringFieldOptions,
-} from '@/types/FieldOptions'
 import { FormFieldsArray, GenericFieldOptions } from '@/types/FormFieldsArray'
 import { FieldValueToOptions, MappedFieldOptions } from '@/types/UtilityTypes'
 import {
@@ -24,6 +18,13 @@ import {
   isZodString,
 } from '@/utils/typeGuards/zodTypeGuards'
 import { unwrapZodType } from '@/utils/zodHelpers'
+
+import type {
+  InputBooleanFieldOptions,
+  InputEnumFieldOptions,
+  InputNumberFieldOptions,
+  InputStringFieldOptions,
+} from '@/types/FieldOptions'
 
 /**
  * Handles the conversion of Zod types to appropriate field options.

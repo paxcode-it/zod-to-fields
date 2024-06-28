@@ -1,34 +1,24 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "target": "es2022",
+    "module": "NodeNext",
     "types": ["jest"],
     "lib": ["esnext", "dom"],
-
-    /* Path Aliases */
+    "moduleDetection": "force",
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
     },
-
-    /* Strictness and Type Checking */
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-
-    /* Emit */
     "declaration": true,
-    "outDir": "build",
-    "rootDir": "./src",
-
-    /* Optimizations */
-    "skipLibCheck": true, //skip checking .d.ts files
+    "outDir": "lib",
+    "skipLibCheck": true,
     "incremental": true
   },
-  "include": ["**/*.ts"],
+  "include": ["src/*.ts", "__tests__/*.ts"],
 
   "exclude": ["node_modules", "**/node_modules", "build", "coverage"]
 }
