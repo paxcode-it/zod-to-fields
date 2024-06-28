@@ -1,24 +1,24 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "target": "es2022",
-    "module": "NodeNext",
-    "types": ["jest"],
-    "lib": ["esnext", "dom"],
+    "allowJs": true,
+    "resolveJsonModule": true,
     "moduleDetection": "force",
-    "baseUrl": "./",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
     "paths": {
       "@/*": ["./src/*"]
     },
     "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    "noImplicitOverride": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
     "declaration": true,
-    "outDir": "lib",
-    "skipLibCheck": true,
-    "incremental": true
+    "incremental": true,
+    "lib": ["es2022", "dom"]
   },
-  "include": ["src/*.ts", "__tests__/*.ts"],
-
-  "exclude": ["node_modules", "**/node_modules", "build", "coverage"]
+  "include": ["src/**/*.ts", "__tests__/**/*.ts"],
+  "exclude": ["node_modules", "lib", "coverage"]
 }

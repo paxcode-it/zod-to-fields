@@ -11,14 +11,19 @@ import {
   GenericSingleFieldOptions,
   NestedObjectFieldOptions,
 } from '@/types/FormFieldsArray'
+import { ObjectKeys } from '@/utils/typeHelpers'
 
 function isFormFieldsArray(value: unknown): value is FormFieldsArray {
   if (!Array.isArray(value)) return false
 
   for (const elem of value) {
-    const keyOfElem = Object.keys(elem)[0]
+    const keysOfElem = ObjectKeys(elem)
+    const keyOfElem = keysOfElem[0]
+
+    if (typeof keyOfElem === 'undefined') return false
+
     const isNestedObjectWithFields =
-      Object.keys(elem).length === 1 && 'fields' in elem[keyOfElem]
+      keysOfElem.length === 1 && 'fields' in elem[keyOfElem]
 
     if (
       isNestedObjectWithFields &&
@@ -61,7 +66,7 @@ function isNestedObjectFieldOptions(
   }
 
   const isMainObjectHaveOneKey = Object.keys(value).length === 1
-  const keyOfElem = Object.keys(value)[0]
+  const keyOfElem = Object.keys(value)[0] ?? ''
 
   const fieldsNested = (value as NestedObjectFieldOptions)[keyOfElem]
 

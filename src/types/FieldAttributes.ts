@@ -1,17 +1,8 @@
-/*eslint @typescript-eslint/no-explicit-any: "off"*/
-type AdditionalAttributes = {
-  [key: string]: any
-}
-
-export type BaseFieldAttributes = {
-  tag: 'input' | 'select'
-  name: string
-  id: string
-  type: EnhancedHTMLInputTypeAttribute
-  label: string
-}
-
-export type ExtendedFieldAttributes = BaseFieldAttributes & AdditionalAttributes
+// I don't remember why I created commented types, but I think I can remove them
+// type AdditionalAttributes = {
+//   [key: string]: any
+// }
+// export type ExtendedFieldAttributes = BaseFieldAttributes & AdditionalAttributes
 
 type EnhancedHTMLInputTypeAttribute =
   | 'button'
@@ -38,3 +29,11 @@ type EnhancedHTMLInputTypeAttribute =
   | 'url'
   | 'week'
   | (string & NonNullable<unknown>)
+
+export type BaseFieldAttributes = {
+  tag: 'input' | 'select'
+  name: string
+  id: string
+  type: EnhancedHTMLInputTypeAttribute
+  label: string
+}

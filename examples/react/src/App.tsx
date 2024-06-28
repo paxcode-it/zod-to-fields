@@ -16,7 +16,11 @@ function App() {
   const [errors, setErrors] = useState<{ [index: string]: any }>({})
 
   const schema = z.object({
-    name: z.string().min(1, { message: 'name can not be empty.' }),
+    name: z
+      .string({
+        required_error: 'Name is required',
+      })
+      .min(1, { message: 'name can not be empty.' }),
     lastName: z.string().min(1, { message: 'lastName can not be empty.' }),
     isAdult: z.boolean(),
     phoneNumber: z
@@ -88,7 +92,7 @@ function App() {
     }))
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
     const result = schema.safeParse(formValues)
@@ -110,7 +114,7 @@ function App() {
           {field.label}
         </label>
         {isSelect ? (
-          <select>
+          <select onChange={e => handleInputChange(e, fieldKey)}>
             {field.options?.map(option => (
               <option key={option.label} value={option.value}>
                 {option.label}
