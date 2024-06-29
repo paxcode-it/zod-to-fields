@@ -1,6 +1,6 @@
 {
   "name": "zod-to-fields",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Turn your Zod schemas into configurable field arrays for easy integration with HTML, React, Vue, and more.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -16,7 +16,10 @@
   },
   "exports": {
     ".": {
-      "types": "./lib/esm/index.d.ts",
+      "types": {
+        "import": "./lib/esm/index.d.ts",
+        "require": "./lib/cjs/index.d.ts"
+      },
       "import": "./lib/esm/index.js",
       "default": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
@@ -41,12 +44,11 @@
     "zod"
   ],
   "peerDependencies": {
-    "zod": "^3.0.0"
+    "zod": "^3.0.0",
+    "react": "^18.2.0"
   },
   "scripts": {
     "dev:react": "pnpm --filter react dev",
-    "dev:vue": "pnpm --filter vue dev",
-    "dev:svelte": "pnpm --filter svelte dev",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
     "build": "tsc --project tsconfig.cjs.json && tsc-alias --project tsconfig.cjs.json && tsc --project tsconfig.esm.json && tsc-alias --project tsconfig.esm.json && echo 'Build complete'",
@@ -64,6 +66,7 @@
   },
   "devDependencies": {
     "@types/jest": "29.5.5",
+    "@types/react": "^18.2.15",
     "@types/validator": "13.11.5",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
@@ -79,6 +82,8 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-ts-webcompat-resolver": "1.0.0",
     "lint-staged": "14.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rimraf": "5.0.1",
     "ts-jest": "29.1.1",
     "ts-node": "10.9.1",

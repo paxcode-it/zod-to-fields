@@ -289,6 +289,7 @@ describe('isNestedObjectFieldOptions', () => {
     const result = isNestedObjectFieldOptions(nestedObject)
     expect(result).toBe(true)
   })
+
   it('should return true for a valid NestedObjectFieldOptions with Enum', () => {
     const nestedObject: NestedObjectFieldOptions = {
       phoneNumbers: {
