@@ -28,7 +28,17 @@ jobs:
       - name: Install Dependencies
         run: pnpm i
 
-      - name: Build and Publish
-        run: pnpm publishPackage
+      - name: Build
+        run: pnpm freshBuild
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        run: pnpm publish:npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        run: pnpm publish:github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
