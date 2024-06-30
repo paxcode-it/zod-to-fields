@@ -35,7 +35,7 @@ jobs:
 
       - name: Configure npm for GitHub Packages
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" > ~/.npmrc
           echo "@wojtekkrol:registry=https://npm.pkg.github.com" >> ~/.npmrc
 
       - name: Insert repository owner as scope into package name
