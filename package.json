@@ -64,6 +64,7 @@
     "publish:github": "pnpm publish --registry=https://npm.pkg.github.com/"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.6",
     "@types/jest": "29.5.5",
     "@types/react": "^18.2.15",
     "@types/validator": "13.11.5",
