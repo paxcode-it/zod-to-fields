@@ -56,7 +56,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Publish to GitHub Packages
-        run: pnpm publish:github
+        run: pnpm publish --registry=https://npm.pkg.github.com/ --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
