@@ -63,8 +63,8 @@
     "pretest": "pnpm lint",
     "coverage": "jest --coverage",
     "test": "jest",
-    "publish:npm": "pnpm publish --access public",
-    "publish:github": "pnpm publish --registry=https://npm.pkg.github.com/ --no-git-checks"
+    "publish:npm": "pnpm publish --access public --registry=https://registry.npmjs.org/",
+    "publish:github": "pnpm publish --access public --registry=https://npm.pkg.github.com/ --no-git-checks"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.6",
