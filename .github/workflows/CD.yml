@@ -36,7 +36,24 @@ jobs:
       - name: Configure npm for GitHub Packages
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-          echo "@wojtekKrol:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "@wojtekkrol:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+      - name: Insert repository owner as scope into package name
+        run: |
+          cp package.json package.json.bak
+          node <<EOF
+          const fs = require('fs').promises;
+          fs.readFile('package.json', 'utf8').then((data) => JSON.parse(data)).then((json) => {
+              json.name = '@' + process.env.GITHUB_REPOSITORY.split('/')[0].toLowerCase() + '/' + json.name;
+              console.info('Package name changed to %s', json.name);
+              return fs.writeFile('package.json', JSON.stringify(json, null, 2), 'utf8');
+          }).catch(error => {
+              console.error(error);
+              process.exit(1);
+          });
+          EOF
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Insert repository owner as scope into package name
         run: |
