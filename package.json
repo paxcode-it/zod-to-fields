@@ -1,6 +1,6 @@
 {
   "name": "zod-to-fields",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Turn your Zod schemas into configurable field arrays for easy integration with HTML, React, Vue, and more.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",

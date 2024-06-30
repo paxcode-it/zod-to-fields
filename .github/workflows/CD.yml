@@ -56,12 +56,16 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Publish to GitHub Packages
-        run: pnpm publish --registry=https://npm.pkg.github.com/ --no-git-checks
+        run: pnpm publish:github
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Revert package.json
         run: mv package.json.bak package.json
+
+      - name: Revert npm configuration for npm registry
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Publish to npm
         run: pnpm publish:npm
