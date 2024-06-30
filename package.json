@@ -11,6 +11,9 @@
     "url": "https://github.com/wojtekKrol/zod-to-fields.git",
     "bugs": "https://github.com/wojtekKrol/zod-to-fields/issues"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@wojtekKrol"
+  },
   "engines": {
     "node": ">=18"
   },
