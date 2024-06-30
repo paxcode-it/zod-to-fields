@@ -1,4 +1,9 @@
-# Zod To Fields
+<h1 align="center">
+    Zod To Fields
+</h1>
+<p align="center">
+    <img src="zod-to-fields.svg" alt="Logo" height="300" />
+</p>
 
 > **<p align="center">
 > Automate your form field generation with type safety.
@@ -76,7 +81,7 @@ Ensure you have the power of Zod To Fields in your project by installing it via 
 
 ```bash
 # With npm
-npm install zod-to-fields --save
+npm install zod-to-fields
 
 # With Yarn
 yarn add zod-to-fields
@@ -200,7 +205,7 @@ withFieldOptions({
 
 #### Type Behavior
 
-- `z.string()` will generate field options of type `InputStringFieldOptions`, which is narrowed to allow string types like `text`, `password`, etc. You can override these settings with any other property which is a subset of `Partial<HTMLInputElement>`.
+- `z.string()` will generate field options of type `InputStringFieldOptions`, which is narrowed to allow string types like `text`, `password`, etc. You can override these settings with any other property which is a subset of `Partial<InputHTMLAttributes<HTMLInputElement>>`.
 
 - `z.enum()` and `z.nativeEnum()` will generate field options of type `InputEnumFieldOptions`, allowing you to specify options either as a select dropdown or as radio buttons.
 
