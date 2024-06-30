@@ -1,6 +1,6 @@
 {
   "name": "zod-to-fields",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "Turn your Zod schemas into configurable field arrays for easy integration with HTML, React, Vue, and more.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -10,6 +10,9 @@
     "type": "git",
     "url": "https://github.com/wojtekKrol/zod-to-fields.git",
     "bugs": "https://github.com/wojtekKrol/zod-to-fields/issues"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@wojtekKrol"
   },
   "engines": {
     "node": ">=18"
